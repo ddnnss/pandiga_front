@@ -1,0 +1,74 @@
+.header
+  padding: 40px 0
+  border-bottom: 1px solid $section-grey-bg
+  background: #FFFFFF
+  box-shadow: 0 -13px 20px 0px #000000a6
+  position: sticky
+  top: 0
+  z-index: 1000
+
+  &-wrapper
+    max-width: 1240px
+    padding: 0 10px
+    margin: 0 auto
+    display: flex
+    align-items: center
+  &-links
+    display: flex
+    flex-grow: 1
+    a
+      margin-right: 50px
+      &:last-child
+        margin-right: 0
+  &-buttons
+    display: flex
+    justify-content: space-between
+    &__group
+      display: flex
+      align-items: center
+      & .login-btn
+        margin-right: 10px
+
+    &__add-tech
+      margin-right: 50px !important
+  &-logo
+    flex-basis: 210px
+  &-link
+    margin-right: 50px
+    &:last-child
+      margin-right: 0
+    &__item
+      color: $header-link-color
+  &-geo
+    position: relative
+    margin-left: 15px
+    cursor: pointer
+    &__place
+      color: $header-geo-text-color
+    &::before
+      position: absolute
+      left: -15px
+      content: url(/geo_marker.png)
+
+
+@media (max-width: 1200px)
+  .header
+    &-wrapper
+      justify-content: space-between
+    &-logo
+      flex-basis: 190px
+    &-link
+      margin-right: 20px
+    &-buttons
+      &__add-tech
+        margin-right: 30px !important
+
+@media (max-width: 768px)
+  .header
+    &-logo
+      flex-basis: unset
+      img
+        width: 120px
+        height: 15px
+
+

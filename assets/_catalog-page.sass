@@ -1,0 +1,184 @@
+.catalog-page
+  padding-top: 30px
+  background: #FFFFFF
+
+.catalog-add-page
+  background: $section-grey-bg
+  padding-top: 50px
+  min-height: 74vh
+
+.catalog-inner
+  background: #FFFFFF
+  &__title
+    display: flex
+    justify-content: space-between
+    align-items: center
+    flex-wrap: wrap
+    border-bottom: 1px solid #D5D5D5
+    padding-bottom: 30px
+    margin-bottom: 20px
+
+    &-inner
+      display: flex
+      align-items: center
+      justify-content: space-between
+      flex-grow: 1
+  &__wrapper
+    display: grid
+    grid-template-columns: 3fr 1fr
+    grid-gap: 20px
+  &__left
+  &__right
+    background: $section-grey-bg
+    padding: 30px 15px
+    height: fit-content
+
+
+.catalog-item
+  position: relative
+  background: $section-grey-bg
+  display: flex
+  justify-content: space-between
+  flex-wrap: wrap
+  padding: 15px 10px
+  margin-bottom: 25px
+  &.vipItem
+    background: #FFF8EC
+    border: 1px solid #F0F0F0
+    box-sizing: border-box
+  &__checked
+    position: absolute
+    z-index: 10
+    left: 10px
+    top: 10px
+
+  &__price
+    &-summ
+      font-weight: 700
+      margin-bottom: 10px
+  &__img
+    position: relative
+    margin-right: 20px
+    width: 240px
+  &__info
+    flex-grow: 1
+    &-title
+      color: $main-color
+      font-size: 22px
+      margin-bottom: 20px
+      max-width: 320px
+    &-subtitle
+      font-size: 14px
+      margin-bottom: 10px
+      &.grey
+        color: #777777
+  &__rating
+    display: flex
+    align-items: center
+    &-wraper
+      display: flex
+      align-items: center
+    &.mobile-show
+      flex-direction: column
+      align-items: flex-start
+    &-p
+      margin-right: 10px
+      font-size: 14px
+      font-weight: 700
+      &::before
+        content: url(/star.png)
+        margin-right: 5px
+    &-span
+      color: #8E8E8E
+      font-size: 12px
+      //display: inline-flex
+
+@media (max-width: 900px)
+  .catalog-inner
+    &__wrapper
+      grid-template-columns: 1fr
+
+@media (max-width: 992px)
+  .catalog-item
+    &__img
+      //img
+      //  width: 140px
+      //  height: 100px
+      //  object-fit: cover
+    &__info
+      &-title
+        font-size: 18px
+      &-subtitle
+        font-size: 12px
+  .mobile-hide
+    display: none
+
+@media (max-width: 570px)
+  .catalog-item
+    height: 250px
+    &__price
+      &-summ
+        margin-bottom: 0
+    &__info
+      max-width: 170px
+      &-btn
+        position: absolute
+        left: 0
+        bottom: 10px
+        right: 0
+        text-align: center
+    &__img
+      margin-right: 0
+      img
+        width: 140px
+        height: 100px
+        object-fit: cover
+@media (max-width: 380px)
+  .catalog-item
+    height: 275px
+    &__info
+      max-width: 120px
+
+@media (min-width: 992px)
+  .mobile-show
+    display: none
+  .mobile-hide
+    display: flex
+    &.hide-block
+      display: block !important
+
+.filter-select
+  flex-grow: 1
+  margin-bottom: 15px
+  input
+    border-radius: 0 !important
+    border: none
+
+.filter-wrapper
+  display: flex
+  flex-wrap: wrap
+.filter-group
+  //margin-bottom: 15px
+  width: 100%
+  &__title
+    font-size: 14px
+    margin-bottom: 10px
+    color: #121212
+  &__row
+    display: grid
+    grid-template-columns: 1fr 1fr
+    grid-gap: 1px
+
+.form-group
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin-bottom: 20px
+
+  p
+    font-size: 14px
+
+
+
+
+
