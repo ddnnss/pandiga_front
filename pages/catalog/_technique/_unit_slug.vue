@@ -70,6 +70,7 @@
         <el-col :sm="8" :md="8" :lg="8">
           <div class="item-owner">
             <p class="item-owner__title">О владельце:</p>
+            <nuxt-link :to="'/user/'+unit.owner.id">
             <div class="item-owner__group">
               <img  class="item-owner__img" :src="unit.owner.avatar" alt="">
               <div class="item-owner__group-inner">
@@ -82,10 +83,7 @@
                 <p class="item-owner__location">{{unit.city}}</p>
               </div>
             </div>
-            <div class="item-owner__btn">
-              <el-button type="primary">Написать</el-button>
-              <el-button plain>Оставить отзыв</el-button>
-            </div>
+            </nuxt-link>
           </div>
         </el-col>
         <el-col :sm="14" :md="16" :lg="16">
@@ -103,7 +101,7 @@
             <el-tab-pane label="Отзывы" name="third">
               <div class="feedback__header">
                 <p v-if="unit.unit_feedbacks.length > 0" class="color-main">{{unit.unit_feedbacks.length}} отзыв о {{unit.name}} </p>
-                <el-button plain>Оставить отзыв</el-button>
+
               </div>
               <div class="feedback" v-for="feedback in unit.unit_feedbacks">
                 <div class="feedback__top">
