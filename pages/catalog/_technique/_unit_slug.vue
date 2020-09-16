@@ -228,8 +228,6 @@
           date: '',
           dates: '',
           time:'',
-
-
         },
         isRentMessage:false,
         loading: true,

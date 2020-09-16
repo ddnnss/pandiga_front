@@ -16,7 +16,7 @@
             class="mb-20"
             v-model="registerForm.is_customer"
             active-color="#CC0000"
-            inactive-color="#cc00007a"
+            inactive-color="#cc0000"
 
             active-text="снять технику"
             inactive-text="сдать технику">
@@ -27,13 +27,13 @@
             class="mb-20"
             v-model="registerForm.is_person"
             active-color="#CC0000"
-            inactive-color="#cc00007a"
+            inactive-color="#cc0000"
 
             active-text="Физическое лицо"
             inactive-text="Юридическое лицо">
           </el-switch>
           <p class="mb-10">Введите Ваш номер телефона:</p>
-          <el-form :model="registerForm" status-icon :rules="rules" ref="registerForm" >
+          <el-form @submit.native.prevent autocomplete="off" :model="registerForm" status-icon :rules="rules" ref="registerForm" >
 
             <el-form-item prop="phone" inline-message="true">
               <el-input  type="tel" clearable v-mask="'+7(###)###-##-##'"  placeholder="Номер телефона" v-model="registerForm.phone"></el-input>
@@ -117,8 +117,8 @@
               remote
 
               reserve-keyword
-              placeholder="Ваш город"
-              auto-complete="off"
+              placeholder="Ваш город (начните вводить)"
+              autocomplete="off"
               :loading-text="'Поиск'"
               :no-match-text="'Нет результатов'"
               :no-data-text="'Нет результата'"
@@ -153,9 +153,9 @@
       </el-card>
       <el-card v-if="register_done_panel" class="login-box">
         <div class="login-content">
-          <h3 class="section-header mb-10">Регистрация завершена</h3>
-          <p class="login-box__subtitle"></p>
-          <nuxt-link to="/login">Вы можете войти в свой аккаунт</nuxt-link>
+          <h3 class="section-header mb-20 text-center">Регистрация завершена</h3>
+          <p style="text-decoration: underline" class=" text-center"><nuxt-link class="color-main" to="/login">Вы можете войти в свой аккаунт</nuxt-link></p>
+
         </div>
       </el-card>
       <div class="login-msg">

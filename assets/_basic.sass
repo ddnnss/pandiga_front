@@ -68,8 +68,12 @@ section
   &.is-plain
     border-color: $main-color !important
     color: $main-color !important
+
 .el-switch__label.is-active
   color: $main-color !important
+  font-weight: bold
+  transition: all .2s linear
+
 .el-radio
   & .is-checked + .el-radio__label
     color: $main-color !important
@@ -226,3 +230,4 @@ section
 .ymapContanerHidden
   opacity: 0
   position: absolute
+  pointer-events: none

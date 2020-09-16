@@ -156,6 +156,9 @@
 </template>
 
 <script>
+
+
+
   export default {
     data() {
       return {
@@ -164,24 +167,38 @@
         userMsgCount:0,
         drawer:false,
         notifications:[],
+        socket:null,
 
       }
     },
     created () {
-      //this.pollData()
-      //this.getNotify()
+
+
 
 
     },
     mounted() {
-      //this.getNotify()
+      // this.socket = new WebSocket('ws://localhost:8000/ws/user/online/')
+      // this.socket.onopen = () => {
+      //   console.log('ws users connected')
+      //   this.socket.send(JSON.stringify({'user_id':this.$auth.user.id}))
+      // }
+      // this.socket.onmessage = (res) =>{
+      //   console.log('message',res)
+      // }
+
+
     },
     methods: {
+      ddd(){
+
+      },
+
       pollData () {
         if (this.$auth.loggedIn){
-                 setInterval(() => {
-          this.getNotify()
-        }, 15000)
+          setInterval(() => {
+            this.getNotify()
+          }, 15000)
         }
 
       },

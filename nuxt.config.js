@@ -43,7 +43,8 @@ export default {
     '@/plugins/element-ui',
     '@/plugins/mask',
     //'@/plugins/v_mask',
-    {src:'@/plugins/ymapPlugin',mode: 'client'}
+    {src:'@/plugins/ymapPlugin',mode: 'client'},
+  //  { src: '@/plugins/ws.js', ssr: false },
   ],
   /*
   ** Auto import components
@@ -64,6 +65,7 @@ export default {
     '@nuxtjs/auth',
 
   ],
+
 
   /*
   ** Axios module configuration

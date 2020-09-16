@@ -196,7 +196,7 @@
                 </client-only>
 
 <!--:loading="add_btn_loading"-->
-              <el-button class="mb-20"  type="primary" @click="createOrder">Разместить заявку</el-button>
+              <el-button v-if="!is_added" class="mb-20"  type="primary" @click="createOrder">Разместить заявку</el-button>
             </el-col>
             <el-col :xs="24" :sm="12" :md="16" :lg="12" :xl="12">
               <el-card shadow="always">

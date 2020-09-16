@@ -32,9 +32,9 @@
 <!--            inactive-text="Я исполнитель"-->
 <!--            @change="updateUser">-->
 <!--          </el-switch>-->
-          <div class="mb-15 flex-wrapper"><p >Баланс: {{userData.balance}} руб</p>  <el-button size="mini" type="success">Пополнить</el-button></div>
-
-         <p class="mb-15">Партнерский баланс: {{userData.partner_balance}} руб</p>
+          <div class="mb-15 flex-wrapper"><p>Баланс: <el-tag type="info">{{userData.balance}} руб</el-tag></p> <el-button size="mini" type="success">Пополнить</el-button></div>
+         <p class="mb-15">Партнерский баланс: <el-tag type="info">{{userData.partner_balance}} руб</el-tag></p>
+         <p class="mb-15">Партнерский код: <el-tag type="info">{{$auth.user.partner_code}}</el-tag></p>
           <p class="mb-15">5 раз сдана техника в аренду<br>5 отзывов получено<br>0 % повторных заказов</p>
            <el-button class="mb-20" @click="editProfileModal = true" type="primary">Изменить профиль</el-button>
         </div>

@@ -8,7 +8,7 @@
           <p class="login-box__subtitle">Чтобы получить доступ к нашим сервисам, войдите, используя данные своего аккаунта </p>
 
           <p class="mb-10">Номер телефона:</p>
-          <el-form :model="loginForm" status-icon :rules="rules"
+          <el-form @submit.native.prevent :model="loginForm" status-icon :rules="rules"
                    ref="loginForm"  class="demo-ruleForm">
             <el-form-item prop="phone" inline-message="true">
 
@@ -46,10 +46,10 @@
           <p class="login-box__subtitle">Введите пароль от Pandiga</p>
 
           <p class="mb-10">Пароль:</p>
-          <el-form :model="passwordForm" status-icon  ref="passwordForm" >
+          <el-form @submit.native.prevent :model="passwordForm" status-icon  ref="passwordForm" >
             <el-form-item prop="password" inline-message="true">
 
-              <el-input  type="password"  placeholder="Ваш пароль" v-model="passwordForm.password"></el-input>
+              <el-input  type="password" :show-password="true"  placeholder="Ваш пароль" v-model="passwordForm.password"></el-input>
             </el-form-item>
             <p v-if="password_error" class="form-error mb-10">Введен не верный пароль</p>
             <el-form-item>

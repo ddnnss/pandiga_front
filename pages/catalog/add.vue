@@ -4,7 +4,9 @@
 
     <div class="container">
       <h1 class="section-header mb-20">ДОБАВИТЬ ТЕХНИКУ В КАТАЛОГ</h1>
-
+      {{cat_price}}
+      {{city_coefficient}}
+      {{total_price}}
       <!--      <p class="mb-10">Добавьте свою технику в базу клуба и начинайте зарабатывать уже сегодня.</p>-->
       <!--      <p class="mb-35">Для этого заполните форму ниже, отредактировать информацию или удалить свою технику вы сможете в любое время.</p>-->
       <el-tabs :tab-position="tabPosition" v-model="activeTab">
@@ -130,28 +132,28 @@
                   :key="item.id"
                   :label="item.city"
                   :value="item.id">
-                   <span style="float: left">{{ item.city }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.region }}</span>
+                  <span style="float: left">{{ item.city }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.region }}</span>
                 </el-option>
               </el-select>
-                <client-only>
-                  <yandex-map
-                    :coords="unit.coords"
-                    :class=" {ymapContanerHidden : !is_city_selected}"
-                    zoom="10"
-                    style="width: 100%; height: 440px; padding: 0;margin-bottom: 20px"
-                    :cluster-options="{ 1: {clusterDisableClickZoom: true} }"
-                    @click="mapClick"
-                    :controls="['trafficControl']"
-                    @map-was-initialized="initHandler"
-                    map-type="map">
-                    <ymap-marker
-                      markerId="1"
-                      marker-type="Placemark"
-                      :coords="unit.coords">
-                    </ymap-marker>
-                  </yandex-map>
-                </client-only>
+              <client-only>
+                <yandex-map
+                  :coords="unit.coords"
+                  :class=" {ymapContanerHidden : !is_city_selected}"
+                  zoom="10"
+                  style="width: 100%; height: 440px; padding: 0;margin-bottom: 20px"
+                  :cluster-options="{ 1: {clusterDisableClickZoom: true} }"
+                  @click="mapClick"
+                  :controls="['trafficControl']"
+                  @map-was-initialized="initHandler"
+                  map-type="map">
+                  <ymap-marker
+                    markerId="1"
+                    marker-type="Placemark"
+                    :coords="unit.coords">
+                  </ymap-marker>
+                </yandex-map>
+              </client-only>
 
               <el-button class="mb-20" :disabled="!unit.city_id"  type="primary" @click="disabled_tab4=false,activeTab='tab4'">Далее</el-button>
             </el-col>
@@ -240,7 +242,15 @@
               <el-dialog :visible.sync="dialogVisible">
                 <img width="100%" :src="dialogImageUrl" alt="">
               </el-dialog>
-              <el-button class="mb-20"  type="primary" v-if="!is_added" :loading="add_btn_loading" @click="addUnit">Добавить технику</el-button>
+              <div v-if="$auth.user.balance >= total_price">
+                <p class="text-bold mb-20">Стоимость размещения {{total_price}} руб</p>
+                <el-button class="mb-20"  type="primary" v-if="!is_added" :loading="add_btn_loading" @click="addUnit">Добавить технику</el-button>
+              </div>
+              <div v-else>
+                 <p class="text-bold mb-20">Стоимость размещения {{total_price}} руб, на Вашем балансе : {{$auth.user.balance}} руб</p>
+                <el-button class="mb-20"  type="primary" >Пополнить баланс</el-button>
+              </div>
+
             </el-col>
             <el-col :xs="24" :sm="12" :md="16" :lg="12" :xl="12">
               <el-card shadow="always">
@@ -283,6 +293,9 @@
         activeTab:'tab1',
         dialogImageUrl: '',
         dialogVisible: false,
+        cat_price: 0,
+        city_coefficient: 0,
+        total_price: 0,
         is_city_selected: false,
         is_added: false,
         add_btn_loading: false,
@@ -351,21 +364,18 @@
     },
     methods: {
       async searchCity(query){
-
         if (query !== '' && query.length >= 2) {
-                 console.log(query)
-
-                const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
-                console.log(result.data)
+          console.log(query)
+          const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
+          console.log(result.data)
           this.cities = result.data
-                } else {
-                  this.cities = [];
-                }
+        } else {
+          this.cities = [];
+        }
       },
       citySelected(){
-        console.log('selected city',this.unit.city_id)
-        console.log(this.cities.find(x => x.id === this.unit.city_id).city)
-
+        this.city_coefficient = parseFloat(this.cities.find(x => x.id === this.unit.city_id).coefficient)
+        this.total_price = parseFloat(this.city_coefficient * this.cat_price)
         ymaps.geocode(this.cities.find(x => x.id === this.unit.city_id).city, {
           results: 1
         }).then( (res) => {
@@ -426,10 +436,11 @@
         this.windowW = window.innerWidth
       },
       categorySelected(){
-        console.log('selected cat',this.selectedCategory)
+
         for (let i of this.categories){
           if (i.name_slug === this.selectedCategory){
             this.types = i.types
+            this.cat_price = i.price
           }
         }
       },

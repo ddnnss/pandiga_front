@@ -170,7 +170,7 @@
       return {
 
         value1: '',
-        radio: '',
+        radio: null,
         options: [],
         value: [],
         list: [],
