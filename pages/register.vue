@@ -258,7 +258,6 @@
 
         if (query !== '' && query.length >= 2) {
                  console.log(query)
-
                 const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
                 console.log(result.data)
           this.cities = result.data

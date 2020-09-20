@@ -1,5 +1,10 @@
 
 export default {
+  env: {
+        ws_url: 'ws://localhost:8000',
+        img_url: 'http://localhost:8000',
+        online_ws:null
+    },
   /*
   ** Nuxt rendering mode
   ** See https://nuxtjs.org/api/configuration-mode

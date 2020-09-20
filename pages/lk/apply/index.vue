@@ -87,39 +87,18 @@
               Предложений: {{order.apply_units.length }}</p>
               <p v-else class="order__bottom-text color-main text-bold">Выполнятся с: {{new Date(order.update_at).toLocaleString()  }}</p>
               <el-button v-if="!order.worker" @click="cancelApply(order.id)" type="primary">Отменить предложение</el-button>
-
             </div>
           </el-card><!--  :pager-count="total_pages"        order-->
-
-
          </div>
-
         </div>
-        <el-card class="orders-right bg-grey h-fit  sticky-block mobile-hide" :body-style="{ width: '100%' }">
-          <ul class="lk-menu__list">
-                <li class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/profile/'">Профиль</nuxt-link> </li>
-                <li class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/chats/'">Сообщения</nuxt-link> </li>
-                <li v-if="this.$auth.user.is_customer" class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/chats/'">Избранное</nuxt-link> </li>
-
-                <li v-if="this.$auth.user.is_customer" class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/orders/'">Мои заявки на технику</nuxt-link> </li>
-                <li v-else class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/apply/'">Мои предложения</nuxt-link> </li>
-          </ul>
-        </el-card>
+        <sidebar></sidebar>
       </div>
-
-
-
-
-
     </div>
   </section>
-
-
-
-
 </template>
 
 <script>
+  import Sidebar from '@/components/Sidebar';
   export default {
     async fetch({store}){
 
@@ -157,6 +136,9 @@
 
 
       }
+    },
+    components:{
+      Sidebar,
     },
     mounted() {
 

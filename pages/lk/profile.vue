@@ -32,9 +32,10 @@
 <!--            inactive-text="Я исполнитель"-->
 <!--            @change="updateUser">-->
 <!--          </el-switch>-->
-          <div class="mb-15 flex-wrapper"><p >Баланс: {{userData.balance}} руб</p>  <el-button size="mini" type="success">Пополнить</el-button></div>
-
-         <p class="mb-15">Партнерский баланс: {{userData.partner_balance}} руб</p>
+          <div class="mb-15 flex-wrapper"><p>Баланс: <el-tag type="info">{{$auth.user.balance}} руб</el-tag></p>
+            <nuxt-link to="/lk/balance"><el-button size="mini" type="success">Пополнить</el-button></nuxt-link></div>
+         <p class="mb-15">Партнерский баланс: <el-tag type="info">{{$auth.user.partner_balance}} руб</el-tag></p>
+         <p class="mb-15">Партнерский код: <el-tag type="info">{{$auth.user.partner_code}}</el-tag></p>
           <p class="mb-15">5 раз сдана техника в аренду<br>5 отзывов получено<br>0 % повторных заказов</p>
            <el-button class="mb-20" @click="editProfileModal = true" type="primary">Изменить профиль</el-button>
         </div>
@@ -56,43 +57,20 @@
         </el-card>
 
       </div>
-      <h3 class="section-header f25">Отзывы</h3>
-      <div class="feedback b-border">
-        <div class="feedback__top">
-          <img class="feedback__top-img" src="http://placehold.it/40" alt="">
-          <div class="feedback__top-from">
-            <p class="feedback__top-from-name">Петр Кутузов</p>
-            <p class="feedback__top-from-date">4 октября 2019</p>
-          </div>
-        </div>
-        <div class="feedback__text">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores ducimus eaque facere nisi quo sunt? Accusamus adipisci architecto aut cupiditate fugiat id, iure mollitia officia perferendis placeat quas, repellat sequi!</p>
-        </div>
-      </div>
-      <div class="feedback b-border">
-        <div class="feedback__top">
-          <img class="feedback__top-img" src="http://placehold.it/40" alt="">
-          <div class="feedback__top-from">
-            <p class="feedback__top-from-name">Петр Кутузов</p>
-            <p class="feedback__top-from-date">4 октября 2019</p>
-          </div>
-        </div>
-        <div class="feedback__text">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores ducimus eaque facere nisi quo sunt? Accusamus adipisci architecto aut cupiditate fugiat id, iure mollitia officia perferendis placeat quas, repellat sequi!</p>
-        </div>
-      </div>
-      <div class="feedback b-border">
-        <div class="feedback__top">
-          <img class="feedback__top-img" src="http://placehold.it/40" alt="">
-          <div class="feedback__top-from">
-            <p class="feedback__top-from-name">Петр Кутузов</p>
-            <p class="feedback__top-from-date">4 октября 2019</p>
-          </div>
-        </div>
-        <div class="feedback__text">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores ducimus eaque facere nisi quo sunt? Accusamus adipisci architecto aut cupiditate fugiat id, iure mollitia officia perferendis placeat quas, repellat sequi!</p>
-        </div>
-      </div>
+     <h3 v-if="feedbacks.length>0" class="section-header f25">Отзывы</h3>
+      <h3 v-else class="section-header f25">Отзывов пока нет</h3>
+        <div class="feedback b-border" v-for="feedback in feedbacks" :key="feedback.id">
+                <div class="feedback__top">
+                  <img class="feedback__top-img" :src="feedback.author.avatar" alt="">
+                  <div class="feedback__top-from">
+                   <nuxt-link :to="'/user/'+feedback.author.id"><p class="feedback__top-from-name">{{feedback.author.fullname}}</p></nuxt-link>
+                    <p class="feedback__top-from-date">{{new Date(feedback.created_at).toLocaleString()}}</p>
+                  </div>
+                </div>
+                <div class="feedback__text">
+                  <p>{{feedback.text}}</p>
+                </div>
+              </div>
     </div>
     <el-dialog
       title="Ваши данные"
@@ -103,9 +81,7 @@
 
         <el-form-item label="Фото">
           <el-upload class="avatar-uploader" action="" :show-file-list="false" :on-success="handleAvatarSuccess">
-
             <img v-if="imageUrl" :src="imageUrl" alt="" class="avatar">
-
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -137,13 +113,15 @@
 
 <script>
   export default {
-    async asyncData({$axios,params}){
+    async asyncData({$axios,$auth,params}){
       console.log(params)
       try{
-        const  user_units_temp = await $axios.get(`/api/v1/technique/user/units/`)
+        const  user_units_temp = await $axios.get(`/api/v1/technique/user/units?user_id=${$auth.user.id}`)
+        const response_feedbacks = await $axios.get(`/api/v1/user/get_user_feedback?user_id=${$auth.user.id}`)
         const user_units = user_units_temp.data
+        const feedbacks = response_feedbacks.data
         console.log(user_units)
-        return {user_units}
+        return {user_units,feedbacks}
       }catch (e) {
         throw e
       }
@@ -157,8 +135,6 @@
         roleChange: false,
         userData: {
           email: this.$auth.user.email,
-          balance: this.$auth.user.balance,
-          partner_balance: this.$auth.user.partner_balance,
           orders_count: this.$auth.user.orders_count,
           rent_count: this.$auth.user.rent_count,
           city: this.$auth.user.city.city,
@@ -171,6 +147,7 @@
       }
     },
     mounted() {
+      this.$auth.fetchUser()
 
     },
     methods: {

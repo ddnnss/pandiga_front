@@ -12,7 +12,8 @@
           <img :src="user.avatar" alt="">
         </div>
         <div class="user-profile__info">
-          <p class="user-profile__info-status">Онлайн</p>
+          <p v-if="user.is_online" class="user-profile__info-status">Онлайн</p>
+          <p v-else class="user-profile__info-status color-main">Оффлайн<br>Последняя активность {{new Date(user.last_online).toLocaleString()}}</p>
           <p class="user-profile__info-name">{{user.fullname}}</p>
           <p class="user-profile__info-location">{{user.city.city}}</p>
         </div>

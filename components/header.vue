@@ -48,23 +48,16 @@
                 <i class="el-icon-user mobile-toggle"></i>
               </el-badge>
               <el-dropdown-menu slot="dropdown">
-                <nuxt-link :to="'/lk/'"><el-dropdown-item ><i class="el-icon-user"></i> Профиль</el-dropdown-item></nuxt-link>
+                <nuxt-link :to="'/lk/profile/'"><el-dropdown-item ><i class="el-icon-user"></i> Профиль</el-dropdown-item></nuxt-link>
+                <nuxt-link :to="'/lk/notifications/'"><el-dropdown-item ><i class="el-icon-bell"></i> Оповещения</el-dropdown-item></nuxt-link>
                 <nuxt-link :to="'/lk/chats/'"><el-dropdown-item><i class="el-icon-chat-line-round"></i> Сообщения</el-dropdown-item></nuxt-link>
                 <nuxt-link v-if="this.$auth.user.is_customer" :to="'/lk/favorite/'"><el-dropdown-item><i class="el-icon-star-off"></i> Избранное</el-dropdown-item></nuxt-link>
-
                 <nuxt-link v-if="this.$auth.user.is_customer" :to="'/lk/orders/'"><el-dropdown-item><i class="el-icon-finished"></i> Мои заявки на технику</el-dropdown-item></nuxt-link>
                 <nuxt-link v-else :to="'/lk/apply/'"><el-dropdown-item><i class="el-icon-finished"></i> Мои предложения</el-dropdown-item></nuxt-link>
-
-
-
-                <el-dropdown-item>
-                  <el-link :underline="false"  icon="el-icon-s-finance">Реферальная система</el-link>
-                </el-dropdown-item>
-
-
+                <nuxt-link :to="'/lk/refferal/'"><el-dropdown-item><i class="el-icon-s-finance"></i>Партнерская программа</el-dropdown-item></nuxt-link>
+                <nuxt-link :to="'/lk/balance/'"><el-dropdown-item><i class="el-icon-wallet"></i>Баланс</el-dropdown-item></nuxt-link>
                 <el-dropdown-item divided>
-                  <el-link :underline="false" @click="$auth.logout()" icon="el-icon-switch-button">Выход</el-link>
-
+                  <el-link :underline="false" @click="logOut()" icon="el-icon-switch-button">Выход</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -92,7 +85,8 @@
                 <i class="el-icon-user mobile-toggle"></i>
               </el-badge>
               <el-dropdown-menu slot="dropdown">
-                <nuxt-link :to="'/lk/'"><el-dropdown-item ><i class="el-icon-user"></i> Профиль</el-dropdown-item></nuxt-link>
+                <nuxt-link :to="'/lk/profile/'"><el-dropdown-item ><i class="el-icon-user"></i> Профиль</el-dropdown-item></nuxt-link>
+                <nuxt-link :to="'/lk/notifications/'"><el-dropdown-item ><i class="el-icon-user"></i> Оповещения</el-dropdown-item></nuxt-link>
                 <nuxt-link :to="'/lk/chats/'"><el-dropdown-item><i class="el-icon-chat-line-round"></i> Сообщения</el-dropdown-item></nuxt-link>
                 <nuxt-link v-if="this.$auth.user.is_customer" :to="'/lk/favorite/'"><el-dropdown-item><i class="el-icon-star-off"></i> Избранное</el-dropdown-item></nuxt-link>
                 <nuxt-link v-if="this.$auth.user.is_customer" :to="'/lk/orders/'"><el-dropdown-item><i class="el-icon-finished"></i> Мои заявки на технику</el-dropdown-item></nuxt-link>
@@ -101,7 +95,7 @@
                   <el-link :underline="false"  icon="el-icon-s-finance">Реферальная система</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item divided>
-                  <el-link :underline="false" @click="$auth.logout()" icon="el-icon-switch-button">Выход</el-link>
+                  <el-link :underline="false" @click="logOut()" icon="el-icon-switch-button">Выход</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -154,11 +148,7 @@
     </el-drawer>
   </header><!--header-->
 </template>
-
 <script>
-
-
-
   export default {
     data() {
       return {
@@ -168,56 +158,70 @@
         drawer:false,
         notifications:[],
         socket:null,
-
+        chat_sound:'/chat.mp3'
       }
     },
     created () {
-
-
-
-
+    },
+     watch: {
+    '$route.path': function() {
+      if(this.$auth.user) {
+        this.getNotifications()
+      }
+    }
+  },
+    beforeDestroy() {
+      console.log('destroy')
     },
     mounted() {
-      // this.socket = new WebSocket('ws://localhost:8000/ws/user/online/')
-      // this.socket.onopen = () => {
-      //   console.log('ws users connected')
-      //   this.socket.send(JSON.stringify({'user_id':this.$auth.user.id}))
-      // }
-      // this.socket.onmessage = (res) =>{
-      //   console.log('message',res)
-      // }
-
-
+      console.log('this.$auth.user',this.$auth.user)
+      if(this.$auth.user){
+        this.getNotifications()
+        console.log(process.env.ws_url)
+        this.socket = new WebSocket(process.env.ws_url+'/ws/user/online/')
+        this.socket.onopen = () => {
+          console.log('ws users connected')
+          this.socket.send(JSON.stringify({'user_id':this.$auth.user.id,'message':'user online'}))
+        }
+        this.socket.onmessage = (res) =>{
+          console.log('message',JSON.parse(res.data))
+          let data = JSON.parse(res.data)
+          if (data.event==='chat' && $nuxt.$route.name!=='lk-chats'){
+            this.showNotify(data.message,data.url)
+          }
+          if(data.event==='order'){
+            this.showNotify(data.message,data.url)
+          }
+        }
+      }
     },
     methods: {
-      ddd(){
-
-      },
-
-      pollData () {
-        if (this.$auth.loggedIn){
-          setInterval(() => {
-            this.getNotify()
-          }, 15000)
-        }
-
-      },
-      async getNotify(){
+      async getNotifications(){
         const response = await  this.$axios.get('/api/v1/notification/get/')
         console.log(response.data)
-        response.data.length > 0 ? this.notifyMgsCount = response.data.length : console.log(response.data.length)
-        for (let n of response.data){
-          console.log(n)
-          this.$notify.info({
-            title: 'Оповещение',
-            message: n.text,
+        this.notifyMgsCount = response.data.length
+         //await this.$axios.post('/api/v1/notification/set_read/')
 
-          });
-
-        }
-        await this.$axios.post('/api/v1/notification/set_read/')
-      }
-
+      },
+      showNotify(message,url){
+        this.$notify({
+              onClick:() => {
+                this.notifyClick(url)
+              },
+              dangerouslyUseHTMLString: true,
+              message: `<strong><p style="cursor: pointer"><i style="margin-right: 10px" class="el-icon-chat-line-round"></i>${message}</p></strong>`
+            });
+            var audio = new Audio(this.chat_sound);
+            audio.play();
+      },
+      notifyClick(url){
+        console.log('n click')
+        this.$router.push(url)
+      },
+      logOut(){
+        this.socket.send(JSON.stringify({'logout_id':this.$auth.user.id}))
+        this.$auth.logout()
+      },
     }
   }
 </script>
