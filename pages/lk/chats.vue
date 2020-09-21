@@ -4,7 +4,7 @@
     <div class="container">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">Техника в Москве</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/lk/' }">Профиль</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/lk/profile' }">Профиль</el-breadcrumb-item>
         <el-breadcrumb-item>Чаты</el-breadcrumb-item>
         {{current_chat_id}}
       </el-breadcrumb>

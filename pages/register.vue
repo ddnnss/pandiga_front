@@ -11,7 +11,7 @@
           <h3 class="section-header mb-10">Регистрация </h3>
           <p class="login-box__subtitle">Чтобы получить доступ к нашим сервисам, зарегистрируйтесь</p>
           <p class="mb-10">Я хочу ...</p>
-  <el-switch
+          <el-switch
             style="display: block"
             class="mb-20"
             v-model="registerForm.is_customer"
@@ -36,9 +36,11 @@
           <el-form @submit.native.prevent autocomplete="off" :model="registerForm" status-icon :rules="rules" ref="registerForm" >
 
             <el-form-item prop="phone" inline-message="true">
-              <el-input  type="tel" clearable v-mask="'+7(###)###-##-##'"  placeholder="Номер телефона" v-model="registerForm.phone"></el-input>
+              <el-input  type="tel" clearable v-mask="'+7(###)###-##-##'" @input="phone_exist = false"  placeholder="Номер телефона" v-model="registerForm.phone"></el-input>
             </el-form-item>
             <p v-if="phone_error" class="form-error mb-10">Похоже, вы ввели некорректный номер телефона</p>
+              <p v-if="phone_exist" class="form-error mb-10">Похоже, у нас аккаунт с этим телефоном.
+Вы можете войти в аккаунт <nuxt-link to="/login/">здесь</nuxt-link>.</p>
             <el-form-item>
               <el-button class="full-w" type="primary" :loading="step1_btn_loading" @click="submitForm('registerForm')">Продолжить</el-button>
             </el-form-item>
@@ -110,43 +112,43 @@
               <el-input  type="text" @input="validateEmail()" placeholder="Ваш EMail" v-model="passwordForm.email"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-select
+              <el-select
 
-              v-model="passwordForm.city_id"
-              filterable
-              remote
+                v-model="passwordForm.city_id"
+                filterable
+                remote
 
-              reserve-keyword
-              placeholder="Ваш город (начните вводить)"
-              autocomplete="off"
-              :loading-text="'Поиск'"
-              :no-match-text="'Нет результатов'"
-              :no-data-text="'Нет результата'"
-              :loading="loading"
-              :remote-method="searchCity">
-              <el-option
-                v-for="item in cities"
-                :key="item.id"
-                :label="item.city"
-                :value="item.id">
-                <span style="float: left; margin-right: 10px">{{ item.city }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.region }}</span>
-              </el-option>
-            </el-select>
+                reserve-keyword
+                placeholder="Ваш город (начните вводить)"
+                autocomplete="off"
+                :loading-text="'Поиск'"
+                :no-match-text="'Нет результатов'"
+                :no-data-text="'Нет результата'"
+                :loading="loading"
+                :remote-method="searchCity">
+                <el-option
+                  v-for="item in cities"
+                  :key="item.id"
+                  :label="item.city"
+                  :value="item.id">
+                  <span style="float: left; margin-right: 10px">{{ item.city }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.region }}</span>
+                </el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item prop="password1" inline-message="true">
               <el-input  type="password"  :show-password="true" @input="checkPasswordL()" placeholder="Введите пароль" v-model="passwordForm.password1"></el-input>
             </el-form-item>
             <el-form-item prop="password2"  inline-message="true">
-              <el-input  type="password" :show-password="true" @input="checkPassword()"  placeholder="Повторите пароль" v-model="passwordForm.password2"></el-input>
+              <el-input  type="password" :disabled="password_length_error" :show-password="true" @input="checkPassword()"  placeholder="Повторите пароль" v-model="passwordForm.password2"></el-input>
             </el-form-item>
             <p v-if="password_error" class="form-error mb-10">{{password_error_text}}</p>
             <p v-if="password_errors" v-for="error in password_errors_text" class="form-error mb-10">
               {{error}}
             </p>
             <el-form-item>
-              <el-button class="full-w" :disabled="passwords_not_match" type="primary" :loading="step2_btn_loading" @click="registerUser()">Зарегистрироваться</el-button>
+              <el-button class="full-w" :disabled="passwords_not_match || password_length_error" type="primary" :loading="step2_btn_loading" @click="registerUser()">Зарегистрироваться</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -201,7 +203,9 @@
         step2_btn_loading:false,
         phone_panel:true,
         phone_error:false,
+        phone_exist:false,
         password_error:false,
+        password_length_error:true,
         password_errors:false,
         password_error_text:'',
         password_errors_text:[],
@@ -254,16 +258,16 @@
       // }
     },
     methods: {
-       async searchCity(query){
+      async searchCity(query){
 
         if (query !== '' && query.length >= 2) {
-                 console.log(query)
-                const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
-                console.log(result.data)
+          console.log(query)
+          const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
+          console.log(result.data)
           this.cities = result.data
-                } else {
-                  this.cities = [];
-                }
+        } else {
+          this.cities = [];
+        }
       },
       registerUser(){
         // if (!this.passwordForm.first_name || !this.passwordForm.last_name || !this.passwordForm.first_name){
@@ -274,15 +278,15 @@
         this.password_error = false
         this.step2_btn_loading = true
         this.$axios.post('/auth/users/',{phone:this.registerForm.phone,
-                                                  password:this.passwordForm.password2,
-                                                  email:this.passwordForm.email,
-                                                  first_name:this.passwordForm.first_name,// ? this.passwordForm.first_name : 'none',
-                                                  last_name:this.passwordForm.last_name,// ? this.passwordForm.last_name : 'none',
-                                                  city:this.passwordForm.city_id,
-                                                  is_person:this.registerForm.is_person,
-                                                  is_customer:this.registerForm.is_customer,
-                                                  organization_name:this.passwordForm.organization_name,// ? this.passwordForm.organization_name : 'none',
-                                                  inn:this.passwordForm.inn,// ? this.passwordForm.inn : 'none',
+          password:this.passwordForm.password2,
+          email:this.passwordForm.email,
+          first_name:this.passwordForm.first_name,// ? this.passwordForm.first_name : 'none',
+          last_name:this.passwordForm.last_name,// ? this.passwordForm.last_name : 'none',
+          city:this.passwordForm.city_id,
+          is_person:this.registerForm.is_person,
+          is_customer:this.registerForm.is_customer,
+          organization_name:this.passwordForm.organization_name,// ? this.passwordForm.organization_name : 'none',
+          inn:this.passwordForm.inn,// ? this.passwordForm.inn : 'none',
         })
           .then((response) => {
             console.log(response.status);
@@ -292,20 +296,25 @@
               this.active_step +=1
               this.register_done_panel=true
             }
-            if (response.status === 400){
-              this.password_error_text = response.data
-              this.password_error =true
-            }
           })
           .then(response => {
             console.log('response1')
             console.log(response)
+
           })
           .catch(error => {
             console.log('response2')
-            console.log(error.response)
-            this.password_errors_text=error.response.data.password
-            this.password_errors_text=error.response.data.email
+              console.log(error.response.data)
+              if(error.response.data['password']){
+                for(let i of error.response.data['password']){
+                console.log(i)
+                this.password_errors_text= i + ' | '
+              }
+              }
+
+
+
+            this.password_errors_text=error.response.data['email']
             this.password_errors =true
             this.step2_btn_loading = false
           });
@@ -326,14 +335,17 @@
         if (this.passwordForm.password1.length < 8){
           this.password_error_text='Минимум 8 символов'
           this.password_error =true
+          this.password_length_error =true
         }else{
           this.password_error =false
+          this.password_length_error =false
         }
       },
       checkPassword(){
         if(this.passwordForm.password1 === this.passwordForm.password2){
           this.password_error =false
           this.passwords_not_match =false
+
         }else{
           this.password_error =true
           this.passwords_not_match = true
@@ -380,7 +392,8 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (formName==='registerForm'){
-              this.sendSMS()
+              this.checkUserPhone()
+
             }
             if (formName==='phoneCheckForm'){
               this.checkSMS()
@@ -391,6 +404,20 @@
           }
         });
       },
+      checkUserPhone(){
+
+        this.$axios.post('/api/v1/user/getUserEmailbyPhone/',{phone:this.registerForm.phone}).then(responce =>{
+          console.log(responce)
+          if (responce.data['result']){
+            console.log('FOUND')
+            this.phone_exist = true
+
+          }else{
+            console.log('NOT FOUND')
+            this.sendSMS()
+          }
+        })
+      }
     }
   }
 </script>

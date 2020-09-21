@@ -40,10 +40,10 @@
             <!--            <el-badge v-if="this.$auth.user.is_customer" :value="false" class="item">-->
             <!--              <i class="el-icon-star-off mobile-toggle"></i>-->
             <!--            </el-badge>-->
-            <el-badge :hidden='notifyMgsCount===0' :value="notifyMgsCount" class="item">
+            <nuxt-link to="/lk/notifications/"><el-badge :hidden='notifyMgsCount===0' :value="notifyMgsCount" class="item">
               <i class="el-icon-bell mobile-toggle"></i>
-            </el-badge>
-            <el-dropdown>
+            </el-badge></nuxt-link>
+            <el-dropdown trigger="click">
               <el-badge :hidden='userMsgCount ===0'  :value="userMsgCount" class="item">
                 <i class="el-icon-user mobile-toggle"></i>
               </el-badge>
@@ -69,7 +69,6 @@
       </div><!--header-buttons-->
       <div class="mobile-buttons mobile-show">
         <div v-if="this.$auth.loggedIn"class="mobile-buttons__group">
-
           <div class="mobile-buttons__group">
             <el-badge :hidden='chatMgsCount === 0' :value="chatMgsCount" class="item">
               <i class="el-icon-chat-line-round mobile-toggle"></i>
@@ -80,11 +79,11 @@
             <el-badge :hidden='notifyMgsCount===0' :value="notifyMgsCount" class="item">
               <i class="el-icon-bell mobile-toggle"></i>
             </el-badge>
-            <el-dropdown>
+            <el-dropdown trigger="click">
               <el-badge :hidden='userMsgCount ===0'  :value="userMsgCount" class="item">
                 <i class="el-icon-user mobile-toggle"></i>
               </el-badge>
-              <el-dropdown-menu slot="dropdown">
+              <el-dropdown-menu  slot="dropdown">
                 <nuxt-link :to="'/lk/profile/'"><el-dropdown-item ><i class="el-icon-user"></i> Профиль</el-dropdown-item></nuxt-link>
                 <nuxt-link :to="'/lk/notifications/'"><el-dropdown-item ><i class="el-icon-user"></i> Оповещения</el-dropdown-item></nuxt-link>
                 <nuxt-link :to="'/lk/chats/'"><el-dropdown-item><i class="el-icon-chat-line-round"></i> Сообщения</el-dropdown-item></nuxt-link>
@@ -104,6 +103,11 @@
             </el-badge>
 
           </div>
+        </div>
+        <div v-else class="mobile-buttons__group">
+           <el-badge class="item">
+              <i @click="drawer = true" class="el-icon-menu mobile-toggle"></i>
+            </el-badge>
         </div>
       </div>
     </div><!--header-wrapper-->
@@ -139,9 +143,14 @@
         <div class="sidebar_buttons">
           <nuxt-link v-if="this.$auth.loggedIn && !this.$auth.user.is_customer" :to="'/catalog/add/'"><el-button  class="header-buttons__add-tech full-w" icon="el-icon-plus" type="primary">Добавить технику</el-button></nuxt-link>
           <nuxt-link v-if="this.$auth.loggedIn && this.$auth.user.is_customer" :to="'/orders/add/'"><el-button  class="header-buttons__add-tech full-w" icon="el-icon-plus" type="primary">Заявка на технику</el-button></nuxt-link>
-          <div v-if="!this.$auth.loggedIn" class="header-buttons__group ">
-            <nuxt-link :to="'/login'"><el-button plain class="login-btn full-w" >Войти</el-button></nuxt-link>
-            <nuxt-link :to="'/register'"><el-button plain class="full-w">Зарегистрироваться</el-button></nuxt-link>
+          <div v-if="!this.$auth.loggedIn" >
+
+               <nuxt-link :to="'/login'"><el-button plain class="login-btn full-w mb-20" >Войти</el-button></nuxt-link>
+
+
+              <nuxt-link :to="'/register'"><el-button plain class="full-w">Зарегистрироваться</el-button></nuxt-link>
+
+
           </div>
         </div>
       </div>
