@@ -60,11 +60,11 @@
       </client-only>
       </div>
 
-      <h3 v-if="offer_units !== 0" class="section-header f25">Какую технику предложить</h3>
-      <h3 v-else class="section-header f25">У Вас нет подходяшей техники для этой заявки</h3>
+      <h3  class="section-header f25">Какую технику предложить</h3>
+<!--      <h3 v-else class="section-header f25">У Вас нет подходяшей техники для этой заявки</h3>-->
       <div class="technique-cards mb-60">
         <el-card :body-style="{ padding: '0px' }"  v-if="unit.type.id === order.type.id" class="technique-card" v-for="unit in user_units" :key="unit.id" :xs="24" :sm="12" :md="8" :lg="8">
-         <span style="display: none">{{offer_units+=1}}</span>
+<!--         <span style="display: none">{{offer_units+=1}}</span>-->
           <el-image class="technique-card__img" :src="unit.images[0].image_thumb">
             <div slot="placeholder" class="image-slot">
               Загрузка<span class="dot">...</span>
@@ -88,7 +88,6 @@
 </template>
 
 <script>
-  import {yandexMap, ymapMarker} from "vue-yandex-maps";
 
   export default {
     async asyncData({$axios,$auth,params}){

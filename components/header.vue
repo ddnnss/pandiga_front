@@ -187,6 +187,7 @@
         if(this.$auth.user && val === '/lk/notifications/') {
           //this.getNotifications()
           console.log('$route.path',val)
+          this.getNotifications()
         }
       }
     },

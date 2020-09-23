@@ -94,11 +94,15 @@
         }
       },
      async getNotifications(){
-        await this.$axios.post('/api/v1/notification/set_read/')
-        const response = await  this.$axios.get('/api/v1/notification/get_other_count/')
-        console.log(response.data)
-        this.notifyMgsCount = response.data['new_messages']
-         await this.$axios.post('/api/v1/notification/set_read/')
+
+       const set_read = await this.$axios.post('/api/v1/notification/set_read/')
+       if (set_read.status === 200){
+         const response = await  this.$axios.get('/api/v1/notification/get_other_count/')
+          console.log(response.data)
+          this.notifyMgsCount = response.data['new_messages']
+       }
+
+
 
       }
 
