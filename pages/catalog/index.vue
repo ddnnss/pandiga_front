@@ -1,6 +1,7 @@
 <template>
 
    <section class="catalog-page">
+    
      <div class="container">
        <h1 class="section-header text-center mb-60">Каталог техники</h1>
        <el-row :gutter="15">

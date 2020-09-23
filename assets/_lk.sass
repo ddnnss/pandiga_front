@@ -56,8 +56,18 @@
     flex-grow: 3
     &-name
       font-weight: 700
+      margin-bottom: 5px
     &-msg
+      margin-left: 10px
       color: #838383
+      display: flex
+      align-items: center
+      &-img
+        margin-right: 10px
+        width: 20px
+        height: 20px
+        border-radius: 50%
+
   &__date
 
     flex-basis: 10%
@@ -89,8 +99,9 @@
     &-message
       display: flex
       margin-bottom: 20px
-
       justify-content: flex-start
+      &.unread-message
+        background: #f9f9f9
       &-img
         margin-right: 20px
         width: 60px

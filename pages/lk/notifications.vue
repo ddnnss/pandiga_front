@@ -15,6 +15,7 @@
 
   <el-table
     :data="notifications"
+    :row-class-name="checkNotify"
     style="width: 100%">
     <el-table-column
       height="250"
@@ -53,7 +54,7 @@
   export default {
     async asyncData({$axios}){
       try{
-        const  response_notifications = await $axios.get(`/api/v1/notification/get_all/`)
+        const  response_notifications = await $axios.get(`/api/v1/notification/get/`)
 
         const notifications = response_notifications.data
         console.log(notifications)
@@ -86,10 +87,17 @@
 
     },
     methods: {
+      checkNotify({row}){
+        console.log(row.is_new)
+        if (row.is_new){
+          return 'isNewNotify'
+        }
+      },
      async getNotifications(){
-        const response = await  this.$axios.get('/api/v1/notification/get/')
+        await this.$axios.post('/api/v1/notification/set_read/')
+        const response = await  this.$axios.get('/api/v1/notification/get_other_count/')
         console.log(response.data)
-        this.notifyMgsCount = response.data.length
+        this.notifyMgsCount = response.data['new_messages']
          await this.$axios.post('/api/v1/notification/set_read/')
 
       }
@@ -97,4 +105,10 @@
     }
   }
 </script>
+<style >
+  .el-table .isNewNotify {
+    background: #fdf6ec;
+  }
 
+
+</style>

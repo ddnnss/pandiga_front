@@ -127,29 +127,18 @@
            this.password_error = true
         }
       },
-      getUserEmail(){
+      async getUserEmail(){
         this.step1_btn_loading = true
-        this.$axios.post('/api/v1/user/getUserEmailbyPhone/',{phone:this.loginForm.phone})
-          .then((response) => {
-            console.log(response.status);
-            console.log(response.data);
-            if (response.status===200){
-              this.passwordForm.email = response.data.email
-              this.login_panel=false;
-              this.password_panel=true;
-            }
-          })
-          .then(response => {
-            console.log('response1')
-            console.log(response)
-          })
-          .catch(error => {
-            console.log('response2')
-            console.log(error.response)
-            this.step1_btn_loading = false
-            this.login_error = true
-
-          });
+        const response = await this.$axios.post('/api/v1/user/getUserEmailbyPhone/',{phone:this.loginForm.phone})
+          console.log(response)
+        if (response.data['result']){
+          this.passwordForm.email = response.data.email
+               this.login_panel=false;
+               this.password_panel=true;
+        }else {
+          this.step1_btn_loading = false
+          this.login_error = true
+        }
       },
       submitForm(formName) {
         console.log('form check');
@@ -158,12 +147,9 @@
             console.log('valid');
               this.getUserEmail()
 
-
-
           } else {
             console.log('error submit!!');
             return new Error('Введите телефон');
-            return false;
           }
         });
       },

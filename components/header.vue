@@ -34,15 +34,19 @@
         </div>
         <div v-if="this.$auth.loggedIn"  class="header-buttons__group ">
           <div class="mobile-buttons__group">
+            <nuxt-link to="/lk/chats/">
             <el-badge :hidden='chatMgsCount === 0' :value="chatMgsCount" class="item">
               <i class="el-icon-chat-line-round mobile-toggle"></i>
             </el-badge>
+            </nuxt-link>
             <!--            <el-badge v-if="this.$auth.user.is_customer" :value="false" class="item">-->
             <!--              <i class="el-icon-star-off mobile-toggle"></i>-->
             <!--            </el-badge>-->
-            <nuxt-link to="/lk/notifications/"><el-badge :hidden='notifyMgsCount===0' :value="notifyMgsCount" class="item">
-              <i class="el-icon-bell mobile-toggle"></i>
-            </el-badge></nuxt-link>
+            <nuxt-link to="/lk/notifications/">
+              <el-badge :hidden='notifyMgsCount===0' :value="notifyMgsCount" class="item">
+                <i class="el-icon-bell mobile-toggle"></i>
+              </el-badge>
+            </nuxt-link>
             <el-dropdown trigger="click">
               <el-badge :hidden='userMsgCount ===0'  :value="userMsgCount" class="item">
                 <i class="el-icon-user mobile-toggle"></i>
@@ -105,9 +109,9 @@
           </div>
         </div>
         <div v-else class="mobile-buttons__group">
-           <el-badge class="item">
-              <i @click="drawer = true" class="el-icon-menu mobile-toggle"></i>
-            </el-badge>
+          <el-badge class="item">
+            <i @click="drawer = true" class="el-icon-menu mobile-toggle"></i>
+          </el-badge>
         </div>
       </div>
     </div><!--header-wrapper-->
@@ -145,10 +149,10 @@
           <nuxt-link v-if="this.$auth.loggedIn && this.$auth.user.is_customer" :to="'/orders/add/'"><el-button  class="header-buttons__add-tech full-w" icon="el-icon-plus" type="primary">Заявка на технику</el-button></nuxt-link>
           <div v-if="!this.$auth.loggedIn" >
 
-               <nuxt-link :to="'/login'"><el-button plain class="login-btn full-w mb-20" >Войти</el-button></nuxt-link>
+            <nuxt-link :to="'/login'"><el-button plain class="login-btn full-w mb-20" >Войти</el-button></nuxt-link>
 
 
-              <nuxt-link :to="'/register'"><el-button plain class="full-w">Зарегистрироваться</el-button></nuxt-link>
+            <nuxt-link :to="'/register'"><el-button plain class="full-w">Зарегистрироваться</el-button></nuxt-link>
 
 
           </div>
@@ -167,18 +171,25 @@
         drawer:false,
         notifications:[],
         socket:null,
+        test:666,
         chat_sound:'/chat.mp3'
       }
     },
     created () {
     },
-     watch: {
-    '$route.path': function() {
-      if(this.$auth.user) {
-        this.getNotifications()
+    watch: {
+      '$route.path': function(val) {
+
+        this.drawer = false
+        if(this.$auth.user) {
+          this.getNotifications()
+        }
+        if(this.$auth.user && val === '/lk/notifications/') {
+          //this.getNotifications()
+          console.log('$route.path',val)
+        }
       }
-    }
-  },
+    },
     beforeDestroy() {
       console.log('destroy')
     },
@@ -196,9 +207,11 @@
           console.log('message',JSON.parse(res.data))
           let data = JSON.parse(res.data)
           if (data.event==='chat' && $nuxt.$route.name!=='lk-chats'){
+            this.getNotifications()
             this.showNotify(data.message,data.url)
           }
           if(data.event==='order'){
+            this.getNotifications()
             this.showNotify(data.message,data.url)
           }
         }
@@ -206,22 +219,25 @@
     },
     methods: {
       async getNotifications(){
-        const response = await  this.$axios.get('/api/v1/notification/get/')
-        console.log(response.data)
-        this.notifyMgsCount = response.data.length
-         //await this.$axios.post('/api/v1/notification/set_read/')
+        const response_messages = await  this.$axios.get('/api/v1/notification/get_messages_count/')
+        const response_other = await  this.$axios.get('/api/v1/notification/get_other_count/')
+        console.log(response_messages.data['new_messages'])
+        this.chatMgsCount = response_messages.data['new_messages']
+        this.notifyMgsCount = response_other.data['new_messages']
+        //this.notifyMgsCount = response.data.length
+        //await this.$axios.post('/api/v1/notification/set_read/')
 
       },
       showNotify(message,url){
         this.$notify({
-              onClick:() => {
-                this.notifyClick(url)
-              },
-              dangerouslyUseHTMLString: true,
-              message: `<strong><p style="cursor: pointer"><i style="margin-right: 10px" class="el-icon-chat-line-round"></i>${message}</p></strong>`
-            });
-            var audio = new Audio(this.chat_sound);
-            audio.play();
+          onClick:() => {
+            this.notifyClick(url)
+          },
+          dangerouslyUseHTMLString: true,
+          message: `<strong><p style="cursor: pointer"><i style="margin-right: 10px" class="el-icon-chat-line-round"></i>${message}</p></strong>`
+        });
+        var audio = new Audio(this.chat_sound);
+        audio.play();
       },
       notifyClick(url){
         console.log('n click')

@@ -91,7 +91,7 @@
             <p class="section-header fg-10 text-center">Нет информации по Вашему запросу</p>
           </div>
         </div>
-        <div class="catalog-inner__right sticky-block">
+        <div class="catalog-inner__right sticky-block mb-35">
           <div class="filter-wrapper ">
             <el-form :model="all_filters" label-width="120px" >
 
@@ -160,9 +160,9 @@
                   </el-option>
                 </el-select>
               </div>
-
+            <el-button type="primary" class="full-w" @click="submitForm">Поиск</el-button>
             </el-form>
-            <el-button type="primary" @click="submitForm">Submit</el-button>
+
           </div>
         </div>
       </div>

@@ -84,11 +84,12 @@
                     </p>
                     <span class="catalog-item__rating-span ">{{unit.city}}</span>
                   </div>
-                  <div class="">
+
+                </div>
+                  <div class="order-buttons">
                     <el-button plain @click="applyAccept(unit.owner,unit.id)">Принять</el-button>
                     <el-button type="primary" @click="applyDecline(unit.owner,unit.id)">Отказать</el-button>
                   </div>
-                </div>
                 <div class="catalog-item__price mobile-hide hide-block">
                   <p class="catalog-item__price-summ">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> ч</span> <span v-if="!unit.rent_type"> д</span></p>
                   <div v-if="unit.rate_times > 0" class="catalog-item__rating ">

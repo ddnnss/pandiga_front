@@ -22,6 +22,9 @@
   background: $section-grey-bg
   padding: 20px 40px
   margin-bottom: 20px
+  &-buttons
+    display: flex
+    align-items: flex-end
   &__text
     font-size: 18px
     margin-bottom: 20px
@@ -67,3 +70,14 @@
     &-text
       color: #8D8D8D
       font-size: 14px
+
+@media (max-width: 570px)
+  .order
+    &-buttons
+      position: absolute
+      bottom: 10px
+      width: 100%
+
+      justify-content: center
+      left: 0
+
