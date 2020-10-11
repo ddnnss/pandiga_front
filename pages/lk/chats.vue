@@ -69,12 +69,16 @@
                 <!--                <div class="chat-content__messages-date" ></div>-->
                 <div  class="chat-content__messages-message " :class="{'unread-message': message.isUnread}" v-for="message in chat_messages">
                   <div class="chat-content__messages-message-img">
-                    <img  :src="message.user.avatar" alt="">
+                    <nuxt-link :to="'/user/'+message.user.id">
+                       <img  :src="message.user.avatar" alt="">
+                    </nuxt-link>
 
                   </div>
                   <div class="chat-content__messages-message-inner">
+                    <nuxt-link :to="'/user/'+message.user.id">
                     <p class="chat-content__messages-message-inner-name">{{message.user.fullname}}
                       <span>{{new Date(message.createdAt).toLocaleString()}}</span></p>
+                       </nuxt-link>
                     <p class="chat-content__messages-message-inner-text">{{message.message}}</p>
                     <el-card class="bg-main color-white mt-10" v-if="message.isRentMessage" shadow="never">
                       <div v-if="message.rentType" style="display: flex;align-items: center;justify-content: space-between" class="">

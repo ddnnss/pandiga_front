@@ -31,21 +31,22 @@
                   :value="type.name_slug">
                 </el-option>
               </el-select>
-              <el-input v-if="unit.selectedType" class="mb-20 filter-select" placeholder="Название" v-model="unit.name"></el-input>
-              <el-switch v-if="unit.name" style="display: block" class="mb-20" v-model="unit.rent_type"
+              <el-input  v-if="unit.selectedType"  class="mb-20 filter-select" placeholder="Название" v-model="unit.name"></el-input>
+              <el-input  v-if="unit.selectedType" v-mask="'####'" class="mb-20 filter-select" placeholder="Год выпуска" v-model="unit.year"></el-input>
+              <el-switch v-if="unit.year" style="display: block" class="mb-20" v-model="unit.rent_type"
                          active-color="#CC0000" inactive-color="#202020"
                          active-text="Почасовая аренда"  inactive-text="Посуточная">
               </el-switch>
-              <div v-if="unit.name" class="form-group ">
+              <div v-if="unit.year" class="form-group ">
                 <p>Минимальное время аренды (<span v-if="unit.rent_type">часов</span><span v-else>дней</span>)</p>
                 <el-input-number v-model="unit.min_rent_time"  controls-position="right" :min="1" :max="unit.rent_type ? 24 : 31"></el-input-number>
               </div>
               <div v-if="unit.min_rent_time" class="form-group">
                 <p>Стоимость аренды в <span v-if="unit.rent_type">час</span><span v-else>день</span></p>
-                <el-input-number :min="1" :max="999999"  v-model="unit.rent_price" style="width: 180px"></el-input-number >
+                <el-input-number :min="1000" :max="999999" controls-position="right" v-model="unit.rent_price" style="width: 180px"></el-input-number >
 
               </div>
-              <el-button class="mb-20" v-if="unit.name" type="primary" @click="disabled_tab2=false,activeTab='tab2'">Далее</el-button>
+              <el-button class="mb-20" v-if="unit.year" type="primary" @click="disabled_tab2=false,activeTab='tab2'">Далее</el-button>
 
             </el-col>
             <el-col :xs="24" :sm="12" :md="8" :lg="12" :xl="12">
@@ -184,13 +185,13 @@
                 <div slot="file" slot-scope="{file}">
                   <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
                   <span class="el-upload-list__item-actions">
-        <span class="el-upload-list__item-preview"  @click="handlePictureCardPreview(file)" >
-          <i class="el-icon-zoom-in"></i>
-        </span>
-        <span v-if="!disabled"  class="el-upload-list__item-delete" @click="handleRemove(file,file.id)">
-          <i class="el-icon-delete"></i>
-        </span>
-      </span>
+                    <span class="el-upload-list__item-preview"  @click="handlePictureCardPreview(file)" >
+                      <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span v-if="!disabled"  class="el-upload-list__item-delete" @click="handleRemove(file,file.id)">
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
                 </div>
               </el-upload>
               <el-dialog :visible.sync="dialogVisible">
@@ -247,30 +248,24 @@
                 <el-button class="mb-20"  type="primary" v-if="!is_added" :loading="add_btn_loading" @click="addUnit">Добавить технику</el-button>
               </div>
               <div v-else>
-                 <p class="text-bold mb-20">Стоимость размещения {{total_price}} руб, на Вашем балансе : {{$auth.user.balance}} руб</p>
-                <el-button class="mb-20"  type="primary" >Пополнить баланс</el-button>
+                <p class="text-bold mb-20">Стоимость размещения {{total_price}} руб, на Вашем балансе : {{$auth.user.balance}} руб</p>
+                <nuxt-link to="/lk/balance"><el-button class="mb-20"  type="primary" >Пополнить баланс</el-button></nuxt-link>
               </div>
-
             </el-col>
             <el-col :xs="24" :sm="12" :md="16" :lg="12" :xl="12">
               <el-card shadow="always">
                 <p class="section-sub-header mb-20">Для чего это нужно?</p>
                 <el-divider></el-divider>
                 <p class="mb-20">Прикрепите документы на технику, чтобы ее подтвердить. </p>
-                <p>Подтвержденная техника вызывает больше доверия</p>
+                <p class="mb-20">Подтвержденная техника вызывает больше доверия</p>
+                <p class="text-bold">Прикрепление документов не обязательно</p>
               </el-card>
             </el-col>
-
           </el-row>
         </el-tab-pane>
-
       </el-tabs>
     </div>
   </section>
-
-
-
-
 </template>
 
 <script>
@@ -307,6 +302,7 @@
         unit:{
           selectedType:'',
           name:'',
+          year:'',
           rent_type:true,
           min_rent_time:'',
           rent_price:'',
@@ -325,8 +321,6 @@
         disabled_tab4:true,
         disabled_tab5:true,
         loading: false,
-
-
       }
     },
     computed:{
@@ -348,9 +342,6 @@
     mounted() {
       this.$nextTick(() => {
         window.addEventListener('resize', this.onResize);
-
-
-
         // navigator.geolocation.getCurrentPosition(pos => {
         //   this.coords.push(pos.coords.latitude);
         //   this.coords.push(pos.coords.longitude);
@@ -358,8 +349,6 @@
         // }, err => {
         //   this.errorStr = err.message;
         // })
-
-
       })
     },
     methods: {
@@ -421,8 +410,6 @@
             message: 'Ваша техника добавлена в каталог',
             type: 'success'
           });
-
-
         })
           .catch(function (error) {
             // handle error
@@ -436,7 +423,6 @@
         this.windowW = window.innerWidth
       },
       categorySelected(){
-
         for (let i of this.categories){
           if (i.name_slug === this.selectedCategory){
             this.types = i.types
@@ -454,7 +440,6 @@
         console.log(this.$refs['imgUpload'].uploadFiles)
         let x=0
         for (let i of this.$refs['imgUpload'].uploadFiles){
-
           if (i.uid === file.uid){
             console.log(x)
             this.$refs['imgUpload'].uploadFiles.splice(x,1)

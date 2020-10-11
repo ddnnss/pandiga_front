@@ -20,12 +20,18 @@
             </div>
           </div>
           <div class="item-info__middle">
-            <h1 class="item-info__middle-title section-header">{{unit.name}}, 2007</h1>
+            <h1 class="item-info__middle-title section-header">{{unit.name}}, {{unit.year}}
+              <div v-if="this.$auth.user.is_customer">
+                 <p v-if="!this.$auth.user.favorites.includes(unit.id)" class="item-info__middle-fav"><i @click="addFav(unit.id)" class="el-icon-star-off"></i></p>
+                  <p v-else class="item-info__middle-fav"><i @click="delFav(unit.id)" class="el-icon-star-on color-yellow"></i></p>
+              </div>
+
+            </h1>
             <div class="item-info__middle-group">
               <p class="item-info__middle-price">{{unit.rent_price}} руб/<span v-if="unit.rent_type">час</span> <span v-if="!unit.rent_type">день</span></p>
               <p class="item-info__middle-text">Мин. время заказа: от {{unit.min_rent_time}} <span v-if="unit.rent_type">ч</span> <span v-if="!unit.rent_type">д</span></p>
             </div>
-            <div class="item-info__middle-group">
+            <div v-if="this.$auth.user.is_customer && unit.owner !== $auth.user.id" class="item-info__middle-group">
               <el-button type="primary" @click="rentData.technique_id = unit.id,rentData.owner_id = unit.owner.id, rentModal=true">Взять в аренду</el-button>
               <el-popover
                 placement="bottom"
@@ -74,8 +80,8 @@
             <div class="item-owner__group">
               <img  class="item-owner__img" :src="unit.owner.avatar" alt="">
               <div class="item-owner__group-inner">
-                <p v-if="unit.owner.first_name"  class="item-owner__name">{{unit.owner.fullname}}</p>
-                <p v-else  class="item-owner__name">Иван Иванов</p>
+                <p v-if="unit.owner.is_person"  class="item-owner__name">{{unit.owner.fullname}}</p>
+                <p v-else  class="item-owner__name">{{unit.owner.organization_name}}</p>
                 <div v-if="unit.owner.rate_times > 0" class="catalog-item__rating mb-10">
                   <p class="catalog-item__rating-p">{{unit.owner.rating}} </p>
                   <span class="catalog-item__rating-span">{{unit.owner.rate_times}} отзыв</span>
@@ -242,6 +248,24 @@
 
     },
     methods: {
+      async addFav(id){
+        const response = await this.$axios.post(`/api/v1/user/fav_add/${id}`)
+        this.$auth.fetchUser()
+        this.$notify({
+              title: 'Успешно',
+              message: 'Техника добалена в избранное',
+              type: 'success'
+            });
+      },
+      async delFav(id){
+        const response = await this.$axios.post(`/api/v1/user/fav_del/${id}`)
+        this.$auth.fetchUser()
+        this.$notify({
+              title: 'Успешно',
+              message: 'Техника удалена из избранного',
+              type: 'success'
+            });
+      },
       showMap(){
         if (this.unit.coords.length >0){
           this.coords = this.unit.coords.replace('[','').replace(']','').split(',')

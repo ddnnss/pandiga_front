@@ -105,7 +105,7 @@
               <el-input  type="text"  placeholder="Ваша фамилия" v-model="passwordForm.last_name"></el-input>
             </el-form-item>
             <el-form-item v-else prop="inn" inline-message="true">
-              <el-input  type="text"  placeholder="ИНН" v-model="passwordForm.inn"></el-input>
+              <el-input  type="text" v-mask="'############'" placeholder="ИНН" v-model="passwordForm.inn"></el-input>
             </el-form-item>
 
             <el-form-item prop="email" inline-message="true">
@@ -358,7 +358,7 @@
           .then((response) => {
             console.log(response.data);
             // TODO Изменить проверку позже
-            if (!response.data['result']){
+            if (response.data['result']){
               this.sms_code=response.data['code']
               this.phone_panel=false;
               this.phone_check_panel=true;
@@ -375,7 +375,7 @@
       },
       checkSMS(){
         // TODO Изменить проверку позже
-        if(this.code!==this.phoneCheckForm.smsCode.replace(/-/g,'')){
+        if(this.sms_code===this.phoneCheckForm.smsCode.replace(/-/g,'')){
           console.log('SMS valid')
           this.phone_check_error = false
           this.phone_check_panel = false

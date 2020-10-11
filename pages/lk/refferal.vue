@@ -12,7 +12,24 @@
 
       <div class="orders grid-wrapper">
         <div class="orders-left">
-        ро
+           <el-table
+      :data="refferals"
+      style="width: 100%">
+      <el-table-column
+        prop="created_at"
+        label="Дата активации кода"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="refferal.fullname"
+        label="Пользователь"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="earned"
+        label="Доход">
+      </el-table-column>
+    </el-table>
         </div>
         <sidebar></sidebar>
       </div>
@@ -23,11 +40,24 @@
 <script>
   import Sidebar from '@/components/Sidebar';
   export default {
+     async asyncData({$axios,$auth}){
+
+      try{
+        const response_refferals = await $axios.get(`/api/v1/user/get_refferals/`)
+
+
+        const refferals = response_refferals.data
+
+        console.log(refferals)
+        return {refferals}
+      }catch (e) {
+        throw e
+      }
+
+    },
 
     data() {
       return {
-
-
 
       }
     },

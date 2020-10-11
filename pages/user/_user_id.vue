@@ -2,11 +2,14 @@
 
   <section class="user-profile">
     <div class="container">
+
      <el-breadcrumb class="pt-20" separator="/">
         <el-breadcrumb-item :to="{path : '/'}">Главная</el-breadcrumb-item>
-        <el-breadcrumb-item >Профиль пользователя {{user.fullname}}</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="user.is_person">Профиль пользователя {{user.fullname}}</el-breadcrumb-item>
+        <el-breadcrumb-item v-else>Профиль организации {{user.organization_name}}</el-breadcrumb-item>
       </el-breadcrumb>
       <h1 class="section-header fg-10 mb-35">Профиль</h1>
+
       <div class="user-profile__wrapper">
         <div class="user-profile__img">
           <img :src="user.avatar" alt="">
@@ -14,7 +17,10 @@
         <div class="user-profile__info">
           <p v-if="user.is_online" class="user-profile__info-status">Онлайн</p>
           <p v-else class="user-profile__info-status color-main">Оффлайн<br>Последняя активность {{new Date(user.last_online).toLocaleString()}}</p>
-          <p class="user-profile__info-name">{{user.fullname}}</p>
+          <p v-if="user.is_person" class="user-profile__info-name">{{user.fullname}}</p>
+          <p v-else class="user-profile__info-name">{{user.organization_name}}</p>
+          <p v-if="!user.is_person">ИНН: {{user.inn}}</p>
+          <p v-if="!user.is_person">ОГРН: {{user.ogrn}}</p>
           <p class="user-profile__info-location">{{user.city.city}}</p>
         </div>
         <div class="user-profile__button">

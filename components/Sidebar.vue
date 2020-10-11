@@ -5,7 +5,7 @@
                 <li class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/notifications/'">Оповещения</nuxt-link> </li>
 
                 <li class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/chats/'">Сообщения</nuxt-link> </li>
-                <li v-if="this.$auth.user.is_customer" class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/chats/'">Избранное</nuxt-link> </li>
+                <li v-if="this.$auth.user.is_customer" class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/favorite/'">Избранное</nuxt-link> </li>
 
                 <li v-if="this.$auth.user.is_customer" class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/orders/'">Мои заявки на технику</nuxt-link> </li>
                 <li v-else class="lk-menu__list-item"><nuxt-link class="lk-menu__list-link" :to="'/lk/apply/'">Мои предложения</nuxt-link> </li>

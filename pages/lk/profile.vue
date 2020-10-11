@@ -15,7 +15,8 @@
             <img  :src="imageUrl" alt="">
           </div>
           <div class="user-profile__info">
-            <p class="user-profile__info-name">{{userData.first_name}} {{userData.last_name}}</p>
+            <p v-if="this.$auth.user.is_person" class="user-profile__info-name">{{userData.first_name}} {{userData.last_name}}</p>
+            <p v-if="!this.$auth.user.is_person" class="user-profile__info-name">{{userData.organization_name}}<br>ИНН: {{userData.inn}}<br>ОГРН: {{userData.ogrn}}</p>
             <p class="user-profile__info-location">{{userData.city}}</p>
           </div>
           <div class="user-profile__button">
@@ -77,7 +78,7 @@
       :visible.sync="editProfileModal"
       width="30%"
       center>
-      <el-form :label-position="'top'" label-width="100px" :model="userData">
+      <el-form :label-position="'left'" label-width="200px" :model="userData">
 
         <el-form-item label="Фото">
           <el-upload class="avatar-uploader" action="" :show-file-list="false" :on-success="handleAvatarSuccess">
@@ -88,12 +89,25 @@
         <el-form-item label="E-Mail">
           <el-input  v-model="userData.email"></el-input>
         </el-form-item>
-        <el-form-item label="Имя">
-          <el-input v-model="userData.first_name"></el-input>
+        <el-form-item v-if="this.$auth.user.is_person" label="Имя">
+          <el-input  v-model="userData.first_name"></el-input>
         </el-form-item>
-        <el-form-item label="Фамилия">
+        <el-form-item v-if="this.$auth.user.is_person" label="Фамилия">
           <el-input v-model="userData.last_name"></el-input>
         </el-form-item>
+
+        <el-form-item v-if="!this.$auth.user.is_person" label="Название организации">
+          <el-input  v-model="userData.organization_name"></el-input>
+        </el-form-item>
+
+        <el-form-item v-if="!this.$auth.user.is_person" label="ИНН">
+          <el-input disabled="" v-model="userData.inn"></el-input>
+        </el-form-item>
+
+        <el-form-item v-if="!this.$auth.user.is_person" label="ОГРН">
+          <el-input  v-model="userData.ogrn"></el-input>
+        </el-form-item>
+
         <el-form-item label="Телефон">
           <el-input disabled="" v-model="userData.phone"></el-input>
         </el-form-item>
@@ -134,6 +148,8 @@
       try{
         const  user_units_temp = await $axios.get(`/api/v1/technique/user/units?user_id=${$auth.user.id}`)
         const response_feedbacks = await $axios.get(`/api/v1/user/get_user_feedback?user_id=${$auth.user.id}`)
+        const response_favorites = await $axios.get(`/api/v1/user/fav_get/`)
+        console.log(response_favorites.data)
         const user_units = user_units_temp.data
         const feedbacks = response_feedbacks.data
         console.log(user_units)
@@ -157,6 +173,9 @@
         },
         userData: {
           email: this.$auth.user.email,
+          organization_name: this.$auth.user.organization_name,
+          inn: this.$auth.user.inn,
+          ogrn: this.$auth.user.ogrn,
           orders_count: this.$auth.user.orders_count,
           rent_count: this.$auth.user.rent_count,
           city: this.$auth.user.city.city,

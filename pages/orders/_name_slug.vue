@@ -27,9 +27,14 @@
         <div class="order__middle">
           <img class="order__middle-img" :src="order.owner.avatar" alt="">
           <div class="order__middle-group">
-            <p class="order__middle-name"><nuxt-link :to="'/'"> {{order.owner.fullname}}</nuxt-link></p>
-            <p class="order__middle-info">Размещено заявок: {{order.owner.orders_count}}</p>
-          </div>
+                <p v-if="order.owner.is_person" class="order__middle-name"><nuxt-link :to="'/user/'+order.owner.id"> {{order.owner.fullname}}</nuxt-link></p>
+                <p v-else class="order__middle-name"><nuxt-link :to="'/user/'+order.owner.id"> {{order.owner.organization_name}}</nuxt-link></p>
+                <p class="order__middle-info">Размещено заявок: {{order.owner.orders_count}}</p>
+                 <div v-if="order.owner.rate_times > 0" class="catalog-item__rating mb-10">
+                  <p class="catalog-item__rating-p">{{order.owner.rating}} </p>
+                  <span class="catalog-item__rating-span">{{order.owner.rate_times}} отзыв</span>
+                </div>
+              </div>
         </div>
         <div class="order__bottom">
 

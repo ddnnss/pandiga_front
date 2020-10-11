@@ -30,6 +30,11 @@
             <div class="catalog-item__img">
               <el-tag v-if="unit.is_moderated" class="catalog-item__checked" type="success" effect="dark">Проверен</el-tag>
               <!--              <img :src="base_url + unit.images[0].image_thumb" alt="">-->
+               <div v-if="$auth.user.is_customer">
+                  <p v-if="!$auth.user.favorites.includes(unit.id)" class="catalog-item__fav-btn item-info__middle-fav"><i @click="addFav(unit.id)" class="el-icon-star-off"></i></p>
+              <p v-else class="catalog-item__fav-btn item-info__middle-fav"><i @click="delFav(unit.id)" class="el-icon-star-on color-yellow"></i></p>
+               </div>
+
               <nuxt-link :to="{'path' : `/catalog/${technique_type.name_slug}/${unit.name_slug}/`} ">
                 <el-image :src="unit.images[0].image_thumb">
                   <div slot="placeholder" class="image-slot">
@@ -47,7 +52,7 @@
               </div>
             </div>
             <div class="catalog-item__info">
-              <p class="catalog-item__info-title"> <nuxt-link :to="{'path' : `/catalog/${technique_type.name_slug}/${unit.name_slug}/`} ">{{unit.name}}, 2007</nuxt-link>  </p>
+              <p class="catalog-item__info-title"> <nuxt-link :to="{'path' : `/catalog/${technique_type.name_slug}/${unit.name_slug}/`} ">{{unit.name}}, {{unit.year}}</nuxt-link>  </p>
               <p class="catalog-item__info-subtitle">2.5 л ( 174 л.c.), дизель, автомат, 4WD</p>
               <p class="catalog-item__info-subtitle grey mobile-hide">Мин. время заказа: от {{unit.min_rent_time}} <span v-if="unit.rent_type"> ч</span> <span v-if="!unit.rent_type"> д</span></p>
               <p class="catalog-item__price-summ mobile-show">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> ч</span> <span v-if="!unit.rent_type"> д</span></p>
@@ -328,6 +333,24 @@
 
     },
     methods: {
+      async addFav(id){
+        const response = await this.$axios.post(`/api/v1/user/fav_add/${id}`)
+        this.$auth.fetchUser()
+        this.$notify({
+              title: 'Успешно',
+              message: 'Техника добалена в избранное',
+              type: 'success'
+            });
+      },
+      async delFav(id){
+        const response = await this.$axios.post(`/api/v1/user/fav_del/${id}`)
+        this.$auth.fetchUser()
+        this.$notify({
+              title: 'Успешно',
+              message: 'Техника удалена из избранного',
+              type: 'success'
+            });
+      },
       async sendMsg(owner_id,is_rent_msg,unit_id){
         await this.$axios.post(`/api/v1/chat/new_message/${owner_id}`,{message:this.private_message,isRentMessage:is_rent_msg,rentUnit:unit_id})
           .then((response) => {

@@ -81,7 +81,7 @@
         <el-tag
           :type="scope.row.is_payed === true ? 'success' : 'danger'"
           disable-transitions>
-          {{scope.row.is_payed ? 'Оплачено' : 'Не оплачено'}}
+          {{scope.row.is_payed ? 'Оплачено' : 'Ожидание оплаты'}}
         </el-tag>
       </template>
     </el-table-column>

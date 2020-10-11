@@ -6,7 +6,8 @@
     <div class="header-wrapper">
       <div class="header-logo">
         <nuxt-link :to="'/'"><img src="/logo.png" alt=""></nuxt-link>
-
+        <p v-if="this.$auth.loggedIn && this.$auth.user.is_customer" class="header-logo__type">Заказчик</p>
+        <p v-if="this.$auth.loggedIn && !this.$auth.user.is_customer" class="header-logo__type">Исполнитель</p>
 
 
       </div>
@@ -34,14 +35,18 @@
         </div>
         <div v-if="this.$auth.loggedIn"  class="header-buttons__group ">
           <div class="mobile-buttons__group">
-            <nuxt-link to="/lk/chats/">
-            <el-badge :hidden='chatMgsCount === 0' :value="chatMgsCount" class="item">
-              <i class="el-icon-chat-line-round mobile-toggle"></i>
+             <nuxt-link to="/lk/favorite/">
+            <el-badge :hidden='this.$auth.user.favorites.length===0' v-if="this.$auth.user.is_customer" :value="this.$auth.user.favorites.length" class="item">
+              <i v-if="this.$auth.user.favorites.length>0" class="el-icon-star-on mobile-toggle"></i>
+              <i v-else class="el-icon-star-off mobile-toggle"></i>
             </el-badge>
+             </nuxt-link>
+            <nuxt-link to="/lk/chats/">
+              <el-badge :hidden='chatMgsCount === 0' :value="chatMgsCount" class="item">
+                <i class="el-icon-chat-line-round mobile-toggle"></i>
+              </el-badge>
             </nuxt-link>
-            <!--            <el-badge v-if="this.$auth.user.is_customer" :value="false" class="item">-->
-            <!--              <i class="el-icon-star-off mobile-toggle"></i>-->
-            <!--            </el-badge>-->
+
             <nuxt-link to="/lk/notifications/">
               <el-badge :hidden='notifyMgsCount===0' :value="notifyMgsCount" class="item">
                 <i class="el-icon-bell mobile-toggle"></i>
@@ -77,9 +82,10 @@
             <el-badge :hidden='chatMgsCount === 0' :value="chatMgsCount" class="item">
               <i class="el-icon-chat-line-round mobile-toggle"></i>
             </el-badge>
-            <!--            <el-badge v-if="this.$auth.user.is_customer" :value="false" class="item">-->
-            <!--              <i class="el-icon-star-off mobile-toggle"></i>-->
-            <!--            </el-badge>-->
+            <el-badge v-if="this.$auth.user.is_customer" :value="this.$auth.user.favorites.length" class="item">
+              <i v-if="this.$auth.user.favorites.length>0" class="el-icon-star-on mobile-toggle"></i>
+              <i v-else class="el-icon-star-off mobile-toggle"></i>
+            </el-badge>
             <el-badge :hidden='notifyMgsCount===0' :value="notifyMgsCount" class="item">
               <i class="el-icon-bell mobile-toggle"></i>
             </el-badge>
