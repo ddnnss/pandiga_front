@@ -7,7 +7,6 @@
         <el-breadcrumb-item :to="{ path: '/lk/profile' }">Профиль</el-breadcrumb-item>
         <el-breadcrumb-item>Чаты</el-breadcrumb-item>
       </el-breadcrumb>
-
       <div class="lk-wrapper">
         <div class="lk-main">
           <div class="chat-wrapper">
@@ -16,7 +15,6 @@
               <div  v-for="chat in chats" :key="chat.id" @click="openChat(chat.id)">
                 <div v-if="chat.starter.id === $auth.user.id" class="chat-user">
                   <div class="chat-user__img">
-
                     <img  :src="chat.opponent.avatar" alt="">
                   </div>
                   <div class="chat-user__info">
@@ -34,7 +32,6 @@
                     <p class="chat-user__date-p">{{new Date(chat.updatedAt).toLocaleString()}}</p>
                   </div>
                 </div>
-
                 <div v-if="chat.opponent.id === $auth.user.id" class="chat-user">
                   <div class="chat-user__img">
                      <img  :src="chat.starter.avatar" alt="">
@@ -54,9 +51,7 @@
                     <p class="chat-user__date-p">{{new Date(chat.updatedAt).toLocaleString()}}</p>
                   </div>
                 </div>
-
               </div><!--chat-user-->
-
             </el-card>
             <div v-if="chat_messages.length === 0" class="chat-content">
               <div class="chat-choose">
@@ -71,13 +66,12 @@
                     <nuxt-link :to="'/user/'+message.user.id">
                        <img  :src="message.user.avatar" alt="">
                     </nuxt-link>
-
                   </div>
                   <div class="chat-content__messages-message-inner">
                     <nuxt-link :to="'/user/'+message.user.id">
-                    <p class="chat-content__messages-message-inner-name">{{message.user.fullname}}
+                      <p class="chat-content__messages-message-inner-name">{{message.user.fullname}}
                       <span>{{new Date(message.createdAt).toLocaleString()}}</span></p>
-                       </nuxt-link>
+                    </nuxt-link>
                     <p class="chat-content__messages-message-inner-text">{{message.message}}</p>
                     <el-card class=" mt-10" v-if="message.isRentMessage" shadow="never">
                       <div v-if="message.rentType" style="display: flex;align-items: center;justify-content: space-between" class="">
