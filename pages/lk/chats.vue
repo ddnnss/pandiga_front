@@ -6,7 +6,6 @@
         <el-breadcrumb-item :to="{ path: '/' }">Техника в Москве</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/lk/profile' }">Профиль</el-breadcrumb-item>
         <el-breadcrumb-item>Чаты</el-breadcrumb-item>
-        {{current_chat_id}}
       </el-breadcrumb>
 
       <div class="lk-wrapper">
@@ -80,7 +79,7 @@
                       <span>{{new Date(message.createdAt).toLocaleString()}}</span></p>
                        </nuxt-link>
                     <p class="chat-content__messages-message-inner-text">{{message.message}}</p>
-                    <el-card class="bg-main color-white mt-10" v-if="message.isRentMessage" shadow="never">
+                    <el-card class=" mt-10" v-if="message.isRentMessage" shadow="never">
                       <div v-if="message.rentType" style="display: flex;align-items: center;justify-content: space-between" class="">
                         <p>{{message.rentDate}} хочу арендовать
                           <el-popover
@@ -91,12 +90,10 @@
                               <el-avatar shape="square" :size="100" :fit="'cover'" :src="message.rentUnit.images[0].image"></el-avatar>
                               <span>Стоимость аренды {{message.rentUnit.rent_price}} Р</span>
                             </div>
-
                             <el-link class="color-white text-bold" slot="reference">{{message.rentUnit.name}}</el-link>
                           </el-popover>
-
                           в период с {{message.rentStartTime}} по {{message.rentEndTime}}</p>
-                        <el-button type="info" plain>Принять</el-button>
+<!--                        <el-button v-if="!$auth.user.is_customer" type="info" plain>Принять</el-button>-->
                       </div>
                       <div v-else style="display: flex;align-items: center;justify-content: space-between" class="">
                         <p>Хочу  взять в аренду
@@ -104,12 +101,15 @@
                             placement="top"
                             width="400"
                             trigger="hover">
-
+                            <div class="">
+                              <el-avatar shape="square" :size="100" :fit="'cover'" :src="message.rentUnit.images[0].image"></el-avatar>
+                              <span>Стоимость аренды {{message.rentUnit.rent_price}} Р</span>
+                            </div>
                             <el-link class="color-white text-bold" slot="reference">{{message.rentUnit.name}}</el-link>
                           </el-popover>
                           c {{message.rentStartDate}} по {{message.rentEndDate}}
                         </p>
-                        <el-button type="info" plain>Принять</el-button>
+<!--                        <el-button type="info" plain>Принять</el-button>-->
                       </div>
                     </el-card>
 

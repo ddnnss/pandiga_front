@@ -195,11 +195,9 @@
         const order = response_order.data
         console.log(order)
         return {order,}
-
       }catch (e) {
         throw e
       }
-
     },
     data() {
       return {
@@ -207,19 +205,15 @@
         value2:false,
         is_finished:false,
         feedbackData:{
-           rate_value:null,
+          rate_value:null,
           rate_text:'',
-
         },
-
       }
     },
     components:{
       Sidebar,
     },
     mounted() {
-
-
     },
     methods: {
       async sendFeedback(){

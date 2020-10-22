@@ -202,7 +202,7 @@
               <el-card shadow="always">
                 <p class="section-sub-header mb-20">Для чего это нужно?</p>
                 <el-divider></el-divider>
-                <p class="mb-20">напишите название Вашей заявки и краткое описание </p>
+                <p class="mb-20">Напишите название Вашей заявки и краткое описание, а также выберите город, в котором нужно выполнить заявку</p>
 
               </el-card>
             </el-col>
@@ -359,10 +359,11 @@
         }).then((response) => {
           this.is_added = true
           this.$notify({
-            title: 'Успешно',
-            message: 'Ваша техника добавлена в каталог',
+            title: 'Спасибо',
+            message: 'Ваша заявка размещена',
             type: 'success'
           });
+          this.$router.push('/')
         })
           .catch(function (error) {
             // handle error

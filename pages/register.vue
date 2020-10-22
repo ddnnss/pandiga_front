@@ -39,27 +39,27 @@
               <el-input  type="tel" clearable v-mask="'+7(###)###-##-##'" @input="phone_exist = false"  placeholder="Номер телефона" v-model="registerForm.phone"></el-input>
             </el-form-item>
             <p v-if="phone_error" class="form-error mb-10">Похоже, вы ввели некорректный номер телефона</p>
-              <p v-if="phone_exist" class="form-error mb-10">Похоже, у нас аккаунт с этим телефоном.
+              <p v-if="phone_exist" class="form-error mb-10">Похоже, у нас уже зарегистрирован аккаунт с этим телефоном.
 Вы можете войти в аккаунт <nuxt-link to="/login/">здесь</nuxt-link>.</p>
             <el-form-item>
               <el-button class="full-w" type="primary" :loading="step1_btn_loading" @click="submitForm('registerForm')">Продолжить</el-button>
             </el-form-item>
           </el-form>
-          <p class="form-hr mb-20">или зарегистрируйтесь через</p>
-          <div class="login-box__soсial">
-            <div class="login-box__soсial-item">
-              <img src="/fb_big.png" alt="">
-              <p class="login-box__ssoсial-item-name">Facebook</p>
-            </div>
-            <div class="login-box__soсial-item">
-              <img src="/gg_big.png" alt="">
-              <p class="login-box__soсial-item-name">Google</p>
-            </div>
-            <div class="login-box__soсial-item">
-              <img src="/vk_big.png" alt="">
-              <p class="login-box__soсial-item-name">VK</p>
-            </div>
-          </div>
+<!--          <p class="form-hr mb-20">или зарегистрируйтесь через</p>-->
+<!--          <div class="login-box__soсial">-->
+<!--            <div class="login-box__soсial-item">-->
+<!--              <img src="/fb_big.png" alt="">-->
+<!--              <p class="login-box__ssoсial-item-name">Facebook</p>-->
+<!--            </div>-->
+<!--            <div class="login-box__soсial-item">-->
+<!--              <img src="/gg_big.png" alt="">-->
+<!--              <p class="login-box__soсial-item-name">Google</p>-->
+<!--            </div>-->
+<!--            <div class="login-box__soсial-item">-->
+<!--              <img src="/vk_big.png" alt="">-->
+<!--              <p class="login-box__soсial-item-name">VK</p>-->
+<!--            </div>-->
+<!--          </div>-->
           <p class="login-box__no-acc">Уже есть аккаунт? <a href="">Войти</a> </p>
         </div>
       </el-card>
@@ -113,11 +113,9 @@
             </el-form-item>
             <el-form-item>
               <el-select
-
                 v-model="passwordForm.city_id"
                 filterable
                 remote
-
                 reserve-keyword
                 placeholder="Ваш город (начните вводить)"
                 autocomplete="off"
@@ -148,7 +146,7 @@
               {{error}}
             </p>
             <el-form-item>
-              <el-button class="full-w" :disabled="passwords_not_match || password_length_error" type="primary" :loading="step2_btn_loading" @click="registerUser()">Зарегистрироваться</el-button>
+              <el-button class="full-w" :disabled="passwords_not_match || password_length_error || email_error" type="primary" :loading="step2_btn_loading" @click="registerUser()">Зарегистрироваться</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -205,6 +203,7 @@
         phone_error:false,
         phone_exist:false,
         password_error:false,
+        email_error:false,
         password_length_error:true,
         password_errors:false,
         password_error_text:'',
@@ -325,7 +324,9 @@
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if(re.test(String(this.passwordForm.email))){
           this.password_error =false
+          this.email_error =false
         }else{
+          this.email_error =true
           this.password_error_text='Ввведите корректный E-Mail'
           this.password_error =true
         }

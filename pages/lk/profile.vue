@@ -36,17 +36,19 @@
             </div>
             <p class="mb-15">Партнерский баланс: <el-tag type="info">{{$auth.user.partner_balance}} руб</el-tag></p>
             <p class="mb-15">Партнерский код: <el-tag type="info">{{$auth.user.partner_code}}</el-tag></p>
-            <p class="mb-15">5 раз сдана техника в аренду<br>5 отзывов получено<br>0 % повторных заказов</p>
+<!--            <p class="mb-15">5 раз сдана техника в аренду<br>5 отзывов получено<br>0 % повторных заказов</p>-->
             <el-button class="mb-20 full-w" @click="editProfileModal = true" type="primary">Изменить профиль</el-button>
             <el-button class="mb-20 full-w" @click="partnerCodeModal = true" type="primary">Ввести код партнера</el-button>
           </div>
         </div>
       </el-card>
 
-
-      <h3 class="section-header f25">Техника</h3>
+      <div v-if="!this.$auth.user.is_customer">
+        <h3 class="section-header f25">Техника</h3>
       <div class="technique-cards mb-60">
+
         <el-card class="technique-card" v-for="unit in user_units" :key="unit.id" :xs="24" :sm="12" :md="8" :lg="8">
+            <nuxt-link :to="`/catalog/${unit.type.name_slug}/${unit.name_slug}`">
           <el-image class="technique-card__img" :src="unit.images[0].image_thumb">
             <div slot="placeholder" class="image-slot">
               Загрузка<span class="dot">...</span>
@@ -55,9 +57,12 @@
 
           <p class="technique-card__name">{{unit.name}}</p>
           <p class="technique-card__price">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> час</span> <span v-if="!unit.rent_type"> день</span> </p>
+        </nuxt-link>
         </el-card>
 
       </div>
+      </div>
+
       <h3 v-if="feedbacks.length>0" class="section-header f25">Отзывы</h3>
       <h3 v-else class="section-header f25">Отзывов пока нет</h3>
       <div class="feedback b-border" v-for="feedback in feedbacks" :key="feedback.id">

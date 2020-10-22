@@ -61,7 +61,7 @@
           class="mb-35"
           :class=" {ymapContanerHidden : !is_city_selected}"
           zoom="10"
-          style="width: 100%; height: 440px; padding: 0;margin-bottom: 20px"
+          style="width: 95%; height: 440px; padding: 0;margin-bottom: 20px"
           :cluster-options="{ 1: {clusterDisableClickZoom: true} }"
           :controls="['trafficControl']"
           map-type="map">
@@ -131,11 +131,10 @@
     <el-dialog
       title="Укажите детали аренды"
       :visible.sync="rentModal"
-      width="30%"
       center>
-      {{rentData.type}}
-      <el-form :label-position="'left'" label-width="120px" :model="rentData">
-        {{rentData.time}}
+
+      <el-form :label-position="'top'" label-width="120px" :model="rentData">
+
         <el-form-item label="Тип аденды">
           <el-radio-group v-model="rentData.type">
             <el-radio-button label="true"  name="type">Почасовая</el-radio-button>

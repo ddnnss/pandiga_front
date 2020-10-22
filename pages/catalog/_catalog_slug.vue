@@ -175,11 +175,9 @@
     <el-dialog
       title="Укажите детали аренды"
       :visible.sync="rentModal"
-      width="30%"
+      class="modal-window"
       center>
-      {{rentData.type}}
-      <el-form :label-position="'left'" label-width="120px" :model="rentData">
-        {{rentData.time}}
+      <el-form :label-position="'top'" label-width="120px" :model="rentData">
         <el-form-item label="Тип аденды">
           <el-radio-group v-model="rentData.type">
             <el-radio-button label="true"  name="type">Почасовая</el-radio-button>
@@ -221,11 +219,6 @@
       :default-time="['00:00:00', '23:59:59']">
     </el-date-picker>
         </div>
-
-
-
-
-
       </el-form>
       <span slot="footer" class="dialog-footer">
 

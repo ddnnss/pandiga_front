@@ -18,8 +18,7 @@
     :row-class-name="checkNotify"
     style="width: 100%">
     <el-table-column
-      height="250"
-      fixed
+      width="200"
       prop="created_at"
       label="Дата">
        <template slot-scope="scope">
@@ -29,11 +28,13 @@
 
 
     <el-table-column
+      width="500"
       prop="text"
       label="Сообщение">
     </el-table-column>
 
     <el-table-column
+
       fixed="right"
       label="Действие">
       <template slot-scope="scope">

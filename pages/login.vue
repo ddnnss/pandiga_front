@@ -20,21 +20,21 @@
               <el-button class="full-w" type="primary" :loading="step1_btn_loading" @click="submitForm('loginForm')">Продолжить</el-button>
             </el-form-item>
           </el-form>
-          <p class="form-hr mb-20">или нажмите ниже, чтобы войти в аккаунт</p>
-          <div class="login-box__soсial">
-            <div class="login-box__soсial-item">
-              <img src="/fb_big.png" alt="">
-              <p class="login-box__ssoсial-item-name">Facebook</p>
-            </div>
-            <div class="login-box__soсial-item">
-              <img src="/gg_big.png" alt="">
-              <p class="login-box__soсial-item-name">Google</p>
-            </div>
-            <div class="login-box__soсial-item">
-              <img src="/vk_big.png" alt="">
-              <p class="login-box__soсial-item-name">VK</p>
-            </div>
-          </div>
+<!--          <p class="form-hr mb-20">или нажмите ниже, чтобы войти в аккаунт</p>-->
+<!--          <div class="login-box__soсial">-->
+<!--            <div class="login-box__soсial-item">-->
+<!--              <img src="/fb_big.png" alt="">-->
+<!--              <p class="login-box__ssoсial-item-name">Facebook</p>-->
+<!--            </div>-->
+<!--            <div class="login-box__soсial-item">-->
+<!--              <img src="/gg_big.png" alt="">-->
+<!--              <p class="login-box__soсial-item-name">Google</p>-->
+<!--            </div>-->
+<!--            <div class="login-box__soсial-item">-->
+<!--              <img src="/vk_big.png" alt="">-->
+<!--              <p class="login-box__soсial-item-name">VK</p>-->
+<!--            </div>-->
+<!--          </div>-->
           <p class="login-box__no-acc">Нет аккаунта? <nuxt-link to="/register/">здесь</nuxt-link> </p>
         </div>
 
