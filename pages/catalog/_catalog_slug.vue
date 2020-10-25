@@ -11,17 +11,17 @@
 
       <div class="catalog-inner__title">
         <h1 class="section-header fg-10">{{technique_type.name}}</h1>
-        <div class="catalog-inner__title-inner">
-          <p style="margin-right: 10px">Сортировка:</p>
-          <el-select v-model="value" placeholder='Выберите'>
-            <el-option
-              v-for="item in options"
-              :key="item.id"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
+<!--        <div class="catalog-inner__title-inner">-->
+<!--          <p style="margin-right: 10px">Сортировка:</p>-->
+<!--          <el-select v-model="value" placeholder='Выберите'>-->
+<!--            <el-option-->
+<!--              v-for="item in order_by"-->
+<!--              :key="item.id"-->
+<!--              :label="item.label"-->
+<!--              :value="item.value">-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </div>-->
       </div>
       <div class="catalog-inner__wrapper">
         <div style="width: 100%" class="catalog-inner__left">
@@ -30,10 +30,13 @@
             <div class="catalog-item__img">
               <el-tag v-if="unit.is_moderated" class="catalog-item__checked" type="success" effect="dark">Проверен</el-tag>
               <!--              <img :src="base_url + unit.images[0].image_thumb" alt="">-->
-               <div v-if="$auth.user.is_customer">
-                  <p v-if="!$auth.user.favorites.includes(unit.id)" class="catalog-item__fav-btn item-info__middle-fav"><i @click="addFav(unit.id)" class="el-icon-star-off"></i></p>
-              <p v-else class="catalog-item__fav-btn item-info__middle-fav"><i @click="delFav(unit.id)" class="el-icon-star-on color-yellow"></i></p>
-               </div>
+              <div v-if="$auth.loggedIn">
+                <div v-if="$auth.user.is_customer">
+                <p v-if="!$auth.user.favorites.includes(unit.id)" class="catalog-item__fav-btn item-info__middle-fav"><i @click="addFav(unit.id)" class="el-icon-star-off"></i></p>
+                <p v-else class="catalog-item__fav-btn item-info__middle-fav"><i @click="delFav(unit.id)" class="el-icon-star-on color-yellow"></i></p>
+              </div>
+              </div>
+
 
               <nuxt-link :to="{'path' : `/catalog/${technique_type.name_slug}/${unit.name_slug}/`} ">
                 <el-image :src="unit.images[0].image_thumb">
@@ -56,7 +59,7 @@
               <p class="catalog-item__info-subtitle">2.5 л ( 174 л.c.), дизель, автомат, 4WD</p>
               <p class="catalog-item__info-subtitle grey mobile-hide">Мин. время заказа: от {{unit.min_rent_time}} <span v-if="unit.rent_type"> ч</span> <span v-if="!unit.rent_type"> д</span></p>
               <p class="catalog-item__price-summ mobile-show">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> ч</span> <span v-if="!unit.rent_type"> д</span></p>
-              <span class="catalog-item__rating-span mobile-show">{{unit.city}} Сегодня</span>
+              <span class="catalog-item__rating-span mobile-show">{{unit.city}} {{new Date(unit.created_at).toLocaleDateString()}}</span>
 
               <div v-if="$auth.loggedIn" class="">
                 <div v-if="$auth.user.is_customer && unit.owner !== $auth.user.id" class="catalog-item__info-btn">
@@ -89,7 +92,7 @@
                 <p class="catalog-item__rating-p">{{unit.rating}} </p>
                 <span class="catalog-item__rating-span">{{unit.rate_times}} отзыв</span>
               </div>
-              <span class="catalog-item__rating-span">{{unit.city}} Сегодня</span>
+              <span class="catalog-item__rating-span">{{unit.city}} {{new Date(unit.created_at).toLocaleDateString()}}</span>
             </div>
           </div><!--catalog-item-->
           <div v-if="technique_units.length === 0" class="">
@@ -155,17 +158,45 @@
                 </div>
               </div>
               <el-divider></el-divider>
-              <div class="filter-group mb-15">
-                <el-select v-model="value" placeholder='Выберите'>
-                  <el-option
-                    v-for="item in options"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
+              <div class="filter-group">
+                <p class="filter-group__title">Сортировка</p>
+                <el-select v-model="order_by_value" placeholder='Выберите'>
+            <el-option
+              v-for="item in order_by"
+              :key="item.id"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
               </div>
-            <el-button type="primary" class="full-w" @click="submitForm">Поиск</el-button>
+              <el-divider></el-divider>
+              <div class="filter-group mb-15">
+
+              <el-select
+                v-model="city_id"
+                filterable
+                remote
+                reserve-keyword
+                clearable
+                placeholder="Город (начните вводить)"
+                autocomplete="off"
+                :loading-text="'Поиск'"
+                :no-match-text="'Нет результатов'"
+                :no-data-text="'Нет результата'"
+                :loading="loading"
+                :remote-method="searchCity">
+                <el-option
+                  v-for="item in cities"
+                  :key="item.id"
+                  :label="item.city"
+                  :value="item.id">
+                  <span style="float: left; margin-right: 10px">{{ item.city }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.region }}</span>
+                </el-option>
+              </el-select>
+
+              </div>
+              <el-button type="primary" class="full-w" @click="submitForm">Поиск</el-button>
             </el-form>
 
           </div>
@@ -186,38 +217,38 @@
         </el-form-item>
         <div v-if="rentData.type === 'true'">
           <el-form-item label="Дата аренды">
+            <el-date-picker
+              v-model="rentData.date"
+              type="date"
+              format="dd/MM/yyyy"
+              value-format="yyyy-MM-dd"
+              :picker-options="dateOptions"
+              placeholder="Выберите день">
+            </el-date-picker>
+          </el-form-item>
+          <p class="mb-10">Выберите время</p>
+          <el-time-picker
+            is-range
+            v-model="rentData.time"
+            format="HH:mm"
+            value-format="HH:mm"
+            range-separator="-"
+            start-placeholder="С"
+            end-placeholder="ПО">
+          </el-time-picker>
+        </div>
+        <div v-else>
+          <p class="mb-10">Выберите даты</p>
           <el-date-picker
-            v-model="rentData.date"
-            type="date"
+            v-model="rentData.dates"
+            type="daterange"
+            start-placeholder="C"
+            end-placeholder="ПО"
             format="dd/MM/yyyy"
             value-format="yyyy-MM-dd"
             :picker-options="dateOptions"
-            placeholder="Выберите день">
+            :default-time="['00:00:00', '23:59:59']">
           </el-date-picker>
-        </el-form-item>
-          <p class="mb-10">Выберите время</p>
-        <el-time-picker
-          is-range
-          v-model="rentData.time"
-          format="HH:mm"
-          value-format="HH:mm"
-          range-separator="-"
-          start-placeholder="С"
-          end-placeholder="ПО">
-        </el-time-picker>
-        </div>
-        <div v-else>
-           <p class="mb-10">Выберите даты</p>
-          <el-date-picker
-      v-model="rentData.dates"
-      type="daterange"
-      start-placeholder="C"
-      end-placeholder="ПО"
-      format="dd/MM/yyyy"
-      value-format="yyyy-MM-dd"
-      :picker-options="dateOptions"
-      :default-time="['00:00:00', '23:59:59']">
-    </el-date-picker>
         </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -277,13 +308,15 @@
         private_message: '',
         technique_type:'',
         items_count:0,
-        loading: true,
+        loading: false,
         rentModal: false,
         rent_time_to:'',
         rent_time_from:'',
         rent_price_from:'',
         rent_price_to:'',
         rent_type:'1',
+        city_id:'',
+        cities:[],
         rentMsg_send:false,
         rentData:{
           technique_id:0,
@@ -298,23 +331,26 @@
         radio1: 'New York',
 
 
-        options: [{
-          value: 'Option1',
-          label: 'По дате'
-        }, {
-          value: 'Option2',
-          label: 'Option2'
-        }, {
-          value: 'Option3',
-          label: 'Option3'
-        }, {
-          value: 'Option4',
-          label: 'Option4'
-        }, {
-          value: 'Option5',
-          label: 'Option5'
-        }],
-        value: '',
+        order_by: [
+          {
+          value: '-created_at',
+          label: 'По дате (сначала новые)'
+        },
+           {
+          value: 'created_at',
+          label: 'По дате (сначала старые)'
+        },
+           {
+          value: 'rent_price',
+          label: 'По стоимости (цена вниз)'
+        },
+           {
+          value: '-rent_price',
+          label: 'По стоимости (цена вверх)'
+        },
+
+        ],
+        order_by_value: '',
         value1: '',
 
 
@@ -326,23 +362,34 @@
 
     },
     methods: {
+      async searchCity(query){
+
+        if (query !== '' && query.length >= 2) {
+          console.log(query)
+          const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
+          console.log('c',result.data)
+          this.cities = result.data
+        } else {
+          this.cities = [];
+        }
+      },
       async addFav(id){
         const response = await this.$axios.post(`/api/v1/user/fav_add/${id}`)
         this.$auth.fetchUser()
         this.$notify({
-              title: 'Успешно',
-              message: 'Техника добалена в избранное',
-              type: 'success'
-            });
+          title: 'Успешно',
+          message: 'Техника добалена в избранное',
+          type: 'success'
+        });
       },
       async delFav(id){
         const response = await this.$axios.post(`/api/v1/user/fav_del/${id}`)
         this.$auth.fetchUser()
         this.$notify({
-              title: 'Успешно',
-              message: 'Техника удалена из избранного',
-              type: 'success'
-            });
+          title: 'Успешно',
+          message: 'Техника удалена из избранного',
+          type: 'success'
+        });
       },
       async sendMsg(owner_id,is_rent_msg,unit_id){
         await this.$axios.post(`/api/v1/chat/new_message/${owner_id}`,{message:this.private_message,isRentMessage:is_rent_msg,rentUnit:unit_id})
@@ -378,10 +425,10 @@
           .then((response) => {
             console.log(response.status);
             this.rentData.technique_id = 0
-          this.rentData.type = 'true'
-          this.rentData.date = ''
-          this.rentData.dates =''
-          this.rentData.time =''
+            this.rentData.type = 'true'
+            this.rentData.date = ''
+            this.rentData.dates =''
+            this.rentData.time =''
             this.rentModal = false
             this.$notify({
               title: 'Успешно',
@@ -416,6 +463,8 @@
               rent_price_from:(this.rent_price_from ? this.rent_price_from : 0),
               rent_price_to:(this.rent_price_to ? this.rent_price_to : 1000000),
               rent_type:  this.rent_type  ,
+              city_id:  this.city_id  ,
+              order_by:  this.order_by_value  ,
 
               'primary_filter': this.all_filters.filter
 

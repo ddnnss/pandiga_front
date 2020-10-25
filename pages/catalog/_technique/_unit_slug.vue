@@ -21,17 +21,19 @@
           </div>
           <div class="item-info__middle">
             <h1 class="item-info__middle-title section-header">{{unit.name}}, {{unit.year}}
+               <div v-if="this.$auth.loggedIn">
               <div v-if="this.$auth.user.is_customer">
                  <p v-if="!this.$auth.user.favorites.includes(unit.id)" class="item-info__middle-fav"><i @click="addFav(unit.id)" class="el-icon-star-off"></i></p>
                   <p v-else class="item-info__middle-fav"><i @click="delFav(unit.id)" class="el-icon-star-on color-yellow"></i></p>
               </div>
+               </div>
 
             </h1>
             <div class="item-info__middle-group">
               <p class="item-info__middle-price">{{unit.rent_price}} руб/<span v-if="unit.rent_type">час</span> <span v-if="!unit.rent_type">день</span></p>
               <p class="item-info__middle-text">Мин. время заказа: от {{unit.min_rent_time}} <span v-if="unit.rent_type">ч</span> <span v-if="!unit.rent_type">д</span></p>
             </div>
-            <div v-if="this.$auth.user.is_customer && unit.owner !== $auth.user.id" class="item-info__middle-group">
+            <div v-if="this.$auth.loggedIn && this.$auth.user.is_customer && unit.owner !== $auth.user.id" class="item-info__middle-group">
               <el-button type="primary" @click="rentData.technique_id = unit.id,rentData.owner_id = unit.owner.id, rentModal=true">Взять в аренду</el-button>
               <el-popover
                 placement="bottom"

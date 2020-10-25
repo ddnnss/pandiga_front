@@ -108,7 +108,11 @@
     &__bottom
       justify-content: space-between
 
-
+.show-btn
+  cursor: pointer
+  color: $main-color
+  &.is-hidden
+    display: none
 
 .main-catalog
   margin-bottom: 100px
@@ -118,11 +122,13 @@
     background-repeat: no-repeat !important
     background-position-x: right !important
     background-position-y: center !important
+    min-height: 240px
     &-list-wrapper
       padding: 20px 0
-
-    min-height: 231px
-
+      transition: all .2s linear
+      &.list-sliced
+        height: 125px
+        overflow: hidden
     &-title
       font-weight: 700
       font-size: 25px
