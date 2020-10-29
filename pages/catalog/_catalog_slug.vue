@@ -361,7 +361,7 @@
       console.log('this.all_filters',this.all_filters)
       console.log('items_count mounted',this.items_count)
       console.log('this.$route.query',this.$route.query)
-      if (this.$route.query){
+      if (this.$route.query['filter']===''){
         console.log(this.$route.query)
       this.all_filters.filter.filter(x => x.name_slug === this.$route.query['filter'])[0].value=this.$route.query['value']
         this.submitForm()

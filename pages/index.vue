@@ -8,7 +8,6 @@
           <div class="main-search__top mobile-search">
             <div class="main-search__top-input-group fg-2">
               <p class="main-search__top-input-label">Искать</p>
-              {{searchQuery}}
             <el-select
                 class="main-search__top-input no-after "
                 v-model="searchQuery"
@@ -24,10 +23,17 @@
                 <el-option
                   v-for="item in searchResults"
                   :key="item.id"
-                  :label="`${item.filter_value_label} - ${item.type_name}`"
-                  :value="`${item.type_name_slug},${item.filter_name_slug},${item.filter_value}`">
-                  <span style="font-weight: bold; float: left; margin-right: 10px">{{ item.filter_value_label }}</span>
+                  :label="item.is_filter_value ? `${item.filter_value_label} - ${item.type_name}` : `${item.type_name}`"
+                  :value="`${item.type_name_slug},${item.filter_name_slug},${item.filter_value},${item.is_filter_value}`">
+                  <div v-if="item.is_filter_value">
+                    <span style="font-weight: bold; float: left; margin-right: 10px">{{ item.filter_value_label }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{ item.type_name }}</span>
+                  </div>
+                  <div v-else>
+                     <span style="font-weight: bold; float: left; margin-right: 10px">{{ item.type_name }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">Категория</span>
+                  </div>
+
                 </el-option>
               </el-select>
             </div>
@@ -207,11 +213,16 @@
       searchIt(){
         let query=[]
         query = this.searchQuery.split(',')
-        console.log(query)
-        this.$router.push(`/catalog/${query[0]}?filter=${query[1]}&value=${query[2]}`)
+        console.log(query[3])
+        if(query[3]==='true'){
+          this.$router.push(`/catalog/${query[0]}?filter=${query[1]}&value=${query[2]}`)
+        }else {
+          this.$router.push(`/catalog/${query[0]}`)
+        }
+
       },
       async searchHandle(query){
-        if (query !== '' && query.length >= 1) {
+        if (query !== '' && query.length >= 2) {
           console.log(query)
           const result = await this.$axios.get(`/api/v1/technique/search/${query}`)
           console.log(result.data)
