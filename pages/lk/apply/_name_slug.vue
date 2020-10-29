@@ -89,7 +89,7 @@
     },
     methods: {
       async sendFeedback(){
-        const respond = await this.$axios.post('/api/v1/user/add_feedback/',{data:this.feedbackData,to:this.order.worker.id,order:this.order.id})
+        const respond = await this.$axios.post('/api/v1/user/add_feedback/',{data:this.feedbackData,order:this.order.id})
         window.location.reload()
       },
       async closeOrder(id){

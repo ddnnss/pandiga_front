@@ -8,7 +8,7 @@
         <el-breadcrumb-item :to="{path : '/catalog/'+unit.type.name_slug+'/'}">{{unit.type.name}}</el-breadcrumb-item>
         <el-breadcrumb-item>{{unit.name}}</el-breadcrumb-item>
       </el-breadcrumb>
-      <el-row >
+      <el-row class="mb-50">
         <el-col :sm="8" :md="12" :lg="12"><carousel :starting-image="2" :images="unit.images"></carousel></el-col>
         <el-col :sm="14" :md="10" :lg="10" :offset="2" class="item-info">
           <div class="item-info__top">
@@ -51,10 +51,13 @@
                 <el-button slot="reference" plain>Написать</el-button>
               </el-popover>
             </div>
-            <p>2.5 л ( 174 л.c.), дизель, автомат, 4WD</p><br>
-            <el-link  class="text-bold fs-14 mb-10" @click="showMap">Показать на карте</el-link>
-          </div>
+<!--            <p>2.5 л ( 174 л.c.), дизель, автомат, 4WD</p><br>-->
+            <div >
+              <span class="text-bold fs-14 ">Размещение: {{unit.city}} | </span>
+               <el-link  class="text-bold fs-14 " @click="showMap">Показать на карте</el-link>
+            </div>
 
+          </div>
         </el-col>
       </el-row>
       <client-only>
@@ -109,13 +112,12 @@
             <el-tab-pane label="Отзывы" name="third">
               <div class="feedback__header">
                 <p v-if="unit.unit_feedbacks.length > 0" class="color-main">{{unit.unit_feedbacks.length}} отзыв о {{unit.name}} </p>
-
               </div>
               <div class="feedback" v-for="feedback in unit.unit_feedbacks">
                 <div class="feedback__top">
-                  <img class="feedback__top-img" src="http://placehold.it/40" alt="">
+                  <img class="feedback__top-img" :src="feedback.author.avatar" alt="">
                   <div class="feedback__top-from">
-                    <p class="feedback__top-from-name">{{feedback.first_name}} {{feedback.last_name}}</p>
+                    <p class="feedback__top-from-name">{{feedback.author.fullname}}</p>
                     <p class="feedback__top-from-date">{{new Date(feedback.created_at).toLocaleString()}}</p>
                   </div>
                 </div>
@@ -124,19 +126,12 @@
                 </div>
               </div>
             </el-tab-pane>
-
           </el-tabs>
-
         </el-col>
       </el-row>
     </div>
-    <el-dialog
-      title="Укажите детали аренды"
-      :visible.sync="rentModal"
-      center>
-
+    <el-dialog title="Укажите детали аренды" :visible.sync="rentModal" center>
       <el-form :label-position="'top'" label-width="120px" :model="rentData">
-
         <el-form-item label="Тип аденды">
           <el-radio-group v-model="rentData.type">
             <el-radio-button label="true"  name="type">Почасовая</el-radio-button>
@@ -178,10 +173,8 @@
             :default-time="['00:00:00', '23:59:59']">
           </el-date-picker>
         </div>
-
       </el-form>
       <span slot="footer" class="dialog-footer">
-
     <el-button :loading="rentMsg_send" type="primary" @click="sendRentMsg">Сохранить</el-button>
   </span>
     </el-dialog>

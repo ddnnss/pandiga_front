@@ -40,7 +40,7 @@
     data() {
       return {
         value1: '',
-        catShow:3,
+        catShow:4,
         listSliced:true,
         radio: '',
         options: [],

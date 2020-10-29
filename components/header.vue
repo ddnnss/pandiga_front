@@ -12,24 +12,36 @@
 
       </div>
       <div class="header-links mobile-hide">
-        <el-link v-if="this.$auth.loggedIn" :underline="false" class="header-link__item" icon="el-icon-position">{{this.$auth.user.city.city}}</el-link>
-        <el-link v-else :underline="false" class="header-link__item" icon="el-icon-position">Москва</el-link>
+<!--        <el-link v-if="this.$auth.loggedIn" :underline="false" class="header-link__item" icon="el-icon-position">{{this.$auth.user.city.city}}</el-link>-->
+<!--        <el-link v-else :underline="false" class="header-link__item" icon="el-icon-position">Москва</el-link>-->
 
 
 
         <!--        <el-link :underline="false" class="header-link__item" >Работа</el-link>-->
 
-        <nuxt-link class="header-link__item el-link el-link--default" :to="'/catalog/'"> Каталог техники</nuxt-link>
 
-        <nuxt-link v-if="this.$auth.loggedIn && !this.$auth.user.is_customer"  to="/orders/" class="header-link__item el-link el-link--default" >Заявки на технику</nuxt-link>
+
 
 
       </div><!--header-links-->
       <div  class="header-buttons mobile-hide">
-        <nuxt-link v-if="this.$auth.loggedIn && !this.$auth.user.is_customer" :to="'/catalog/add/'"><el-button  class="header-buttons__add-tech" icon="el-icon-plus" type="primary">Добавить технику</el-button></nuxt-link>
-        <nuxt-link v-if="this.$auth.loggedIn && this.$auth.user.is_customer" :to="'/orders/add/'"><el-button  class="header-buttons__add-tech" icon="el-icon-plus" type="primary">Заявка на технику</el-button></nuxt-link>
+        <nuxt-link style="margin-right: 10px" class="header-link__item el-link el-link--default" :to="'/catalog/'">
+            <el-button v-if="!this.$auth.loggedIn" icon="el-icon-truck" type="primary">Каталог техники</el-button>
+            <el-button v-else plain icon="el-icon-truck">Каталог техники</el-button>
+          </nuxt-link>
+        <nuxt-link style="margin-right: 10px" v-if="this.$auth.loggedIn && !this.$auth.user.is_customer" to="/orders/"
+                   class="header-link__item el-link el-link--default" >
+          <el-button plain  icon="el-icon-folder-opened">Заявки на технику</el-button>
+        </nuxt-link>
+        <nuxt-link v-if="this.$auth.loggedIn && !this.$auth.user.is_customer" :to="'/catalog/add/'">
+          <el-button  class="header-buttons__add-tech" icon="el-icon-plus" type="primary">Добавить технику</el-button>
+        </nuxt-link>
+        <nuxt-link v-if="this.$auth.loggedIn && this.$auth.user.is_customer" :to="'/orders/add/'">
+          <el-button  class="header-buttons__add-tech" icon="el-icon-plus" type="primary">Заявка на технику</el-button>
+        </nuxt-link>
 
         <div v-if="!this.$auth.loggedIn" class="header-buttons__group ">
+
           <nuxt-link :to="'/login'"><el-button plain class="login-btn">Войти</el-button></nuxt-link>
           <nuxt-link :to="'/register'"><el-button plain>Зарегистрироваться</el-button></nuxt-link>
         </div>
@@ -136,23 +148,31 @@
           v-if="this.$auth.loggedIn"
           default-active="2"
           class="el-menu-vertical-demo no-border">
-          <el-menu-item index="2">
-            <i class="el-icon-position"></i>
-            <span>Москва</span>
-          </el-menu-item>
+<!--          <el-menu-item index="2">-->
+<!--            <i class="el-icon-position"></i>-->
+<!--            <span>Москва</span>-->
+<!--          </el-menu-item>-->
 
-          <el-menu-item index="4">
-            <i class="el-icon-info"></i>
-            <span>Работа</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <i class="el-icon-question"></i>
-            <span>Нужна техника</span>
-          </el-menu-item>
+<!--          <el-menu-item index="4">-->
+<!--            <i class="el-icon-info"></i>-->
+<!--            <span>Работа</span>-->
+<!--          </el-menu-item>-->
+
         </el-menu>
         <div class="sidebar_buttons">
-          <nuxt-link v-if="this.$auth.loggedIn && !this.$auth.user.is_customer" :to="'/catalog/add/'"><el-button  class="header-buttons__add-tech full-w" icon="el-icon-plus" type="primary">Добавить технику</el-button></nuxt-link>
-          <nuxt-link v-if="this.$auth.loggedIn && this.$auth.user.is_customer" :to="'/orders/add/'"><el-button  class="header-buttons__add-tech full-w" icon="el-icon-plus" type="primary">Заявка на технику</el-button></nuxt-link>
+          <nuxt-link  :to="'/catalog/'">
+            <el-button class="header-buttons__add-tech full-w mb-20" v-if="!this.$auth.loggedIn" icon="el-icon-truck" type="primary">Каталог техники</el-button>
+            <el-button class="header-buttons__add-tech full-w mb-20" v-else plain icon="el-icon-truck">Каталог техники</el-button>
+          </nuxt-link>
+        <nuxt-link  v-if="this.$auth.loggedIn && !this.$auth.user.is_customer"  to="/orders/"  >
+          <el-button class="header-buttons__add-tech full-w mb-20" plain  icon="el-icon-folder-opened"> Заявки на технику</el-button>
+        </nuxt-link>
+          <nuxt-link v-if="this.$auth.loggedIn && !this.$auth.user.is_customer" :to="'/catalog/add/'">
+            <el-button  class="header-buttons__add-tech full-w" icon="el-icon-plus" type="primary">Добавить технику</el-button>
+          </nuxt-link>
+          <nuxt-link v-if="this.$auth.loggedIn && this.$auth.user.is_customer" :to="'/orders/add/'">
+            <el-button  class="header-buttons__add-tech full-w" icon="el-icon-plus" type="primary">Заявка на технику</el-button>
+          </nuxt-link>
           <div v-if="!this.$auth.loggedIn" >
 
             <nuxt-link :to="'/login'"><el-button plain class="login-btn full-w mb-20" >Войти</el-button></nuxt-link>

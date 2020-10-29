@@ -123,6 +123,7 @@
                 :no-match-text="'Нет результатов'"
                 :no-data-text="'Нет результата'"
                 :loading="loading"
+                @change="citySelectChange"
                 :remote-method="searchCity">
                 <el-option
                   v-for="item in cities"
@@ -257,6 +258,9 @@
       // }
     },
     methods: {
+      citySelectChange(){
+
+      },
       async searchCity(query){
 
         if (query !== '' && query.length >= 2) {

@@ -3,9 +3,14 @@
   padding: 60px 0
   text-align: center
   margin-bottom: 90px
+  &-wrapper
+    display: flex
+    align-items: center
+    justify-content: space-between
+    flex-wrap: wrap
   &__btn
-    width: 145px
-    height: 55px
+    width: 300px
+    height: 70px
   &__title
     font-weight: 700
     font-size: 35px
@@ -26,7 +31,9 @@
     flex-wrap: wrap
     align-items: center
     justify-content: space-between
-    margin-bottom: 15px
+    //margin-bottom: 15px
+    flex-grow: 1
+    margin-right: 20px
 
     &-input
       &.radio-group
@@ -65,6 +72,7 @@
   .main-search
     padding: 20px 0
     margin-bottom: 40px
+
     &__btn
       width: 100% !important
     &__bottom
@@ -73,6 +81,7 @@
       margin-bottom: 0 !important
       padding: 0  !important
       background: transparent
+      margin-right: 0
       &-input
         &::after
           content: none
@@ -111,6 +120,7 @@
 .show-btn
   cursor: pointer
   color: $main-color
+  margin-bottom: 20px
   &.is-hidden
     display: none
 

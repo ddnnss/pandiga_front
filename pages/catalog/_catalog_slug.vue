@@ -11,6 +11,7 @@
 
       <div class="catalog-inner__title">
         <h1 class="section-header fg-10">{{technique_type.name}}</h1>
+
 <!--        <div class="catalog-inner__title-inner">-->
 <!--          <p style="margin-right: 10px">Сортировка:</p>-->
 <!--          <el-select v-model="value" placeholder='Выберите'>-->
@@ -56,7 +57,7 @@
             </div>
             <div class="catalog-item__info">
               <p class="catalog-item__info-title"> <nuxt-link :to="{'path' : `/catalog/${technique_type.name_slug}/${unit.name_slug}/`} ">{{unit.name}}, {{unit.year}}</nuxt-link>  </p>
-              <p class="catalog-item__info-subtitle">2.5 л ( 174 л.c.), дизель, автомат, 4WD</p>
+<!--              <p class="catalog-item__info-subtitle">2.5 л ( 174 л.c.), дизель, автомат, 4WD</p>-->
               <p class="catalog-item__info-subtitle grey mobile-hide">Мин. время заказа: от {{unit.min_rent_time}} <span v-if="unit.rent_type"> ч</span> <span v-if="!unit.rent_type"> д</span></p>
               <p class="catalog-item__price-summ mobile-show">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> ч</span> <span v-if="!unit.rent_type"> д</span></p>
               <span class="catalog-item__rating-span mobile-show">{{unit.city}} {{new Date(unit.created_at).toLocaleDateString()}}</span>
@@ -357,13 +358,21 @@
       }
     },
     mounted() {
-      console.log(this.all_filters)
+      console.log('this.all_filters',this.all_filters)
       console.log('items_count mounted',this.items_count)
+      console.log('this.$route.query',this.$route.query)
+      if (this.$route.query){
+        console.log(this.$route.query)
+      this.all_filters.filter.filter(x => x.name_slug === this.$route.query['filter'])[0].value=this.$route.query['value']
+        this.submitForm()
+      }else {
+        console.log('empty')
+      }
+
 
     },
     methods: {
       async searchCity(query){
-
         if (query !== '' && query.length >= 2) {
           console.log(query)
           const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)

@@ -1,0 +1,79 @@
+<div class="main-search">
+      <div class="container">
+        <h3 class="main-search__title">Поиск техники</h3>
+        <div class="main-search__top mobile-search">
+          <div class="main-search__top-input-group fg-1">
+            <p class="main-search__top-input-label">Искать</p>
+            <el-input  class="main-search__top-input" placeholder="Что ищем" ></el-input>
+          </div>
+
+          <div class="main-search__top-input-group">
+            <p class="main-search__top-input-label">Город</p>
+            <el-select
+              class="main-search__top-input"
+              v-model="city_id"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="Город"
+              :loading-text="'Поиск'"
+              :no-match-text="'Нет результатов'"
+              :no-data-text="'Нет результата'"
+              :loading="loading"
+              :remote-method="searchCity">
+              <el-option
+                v-for="item in cities"
+                :key="item.id"
+                :label="item.city"
+                :value="item.id">
+                <span style="float: left; margin-right: 10px">{{ item.city }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.region }}</span>
+              </el-option>
+            </el-select>
+          </div>
+          <div class="main-search__top-input-group ">
+            <p class="main-search__top-input-label">Дата</p>
+            <el-date-picker
+              class="main-search__top-input"
+              v-model="value1"
+              type="date"
+              format="dd MMMM yyyy"
+              placeholder="Выберите дату">
+            </el-date-picker>
+          </div>
+          <div class="main-search__top-input-group mobile-hide xs-show">
+            <p class="main-search__top-input-label">Срок в</p>
+            <div class="main-search__top-input radio-group">
+              <el-radio  v-model="radio" label="1">Часах</el-radio>
+              <el-radio v-model="radio" label="2">Днях</el-radio>
+            </div>
+
+          </div>
+          <div class="main-search__top-input-group mobile-hide xs-show">
+            <p class="main-search__top-input-label">К-во часов</p>
+            <el-input  class="main-search__top-input no-after" placeholder="12 часов" ></el-input>
+          </div>
+        </div>
+        <div class="main-search__bottom">
+          <div class="main-search__top mobile-show xs-hide mr-10">
+
+          <div class="main-search__top-input-group">
+            <p class="main-search__top-input-label">Срок в</p>
+            <div class="main-search__top-input radio-group">
+              <el-radio  v-model="radio" label="1">Часах</el-radio>
+              <el-radio v-model="radio" label="2">Днях</el-radio>
+            </div>
+
+          </div>
+          <div class="main-search__top-input-group ">
+            <p class="main-search__top-input-label">К-во часов</p>
+            <el-input  class="main-search__top-input no-after" placeholder="12 часов" ></el-input>
+          </div>
+
+        </div>
+          <div class="main-search__bottom-btn">
+            <el-button class="main-search__btn" type="primary">Найти</el-button>
+          </div>
+        </div>
+      </div>
+    </div>
