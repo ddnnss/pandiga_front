@@ -51,8 +51,10 @@
                 :no-match-text="'Нет результатов'"
                 :no-data-text="'Нет результата'"
                 :loading="loading"
+
                 :remote-method="searchCity">
                 <el-option
+
                   v-for="item in cities"
                   :key="item.id"
                   :label="item.city"
@@ -180,7 +182,6 @@
     },
     data() {
       return {
-
         value1: '',
         searchQuery:'',
         searchResults:[],
@@ -192,9 +193,6 @@
         city_id:'',
         cities:[],
         test:null,
-
-
-
       }
     },
     computed:{
@@ -210,14 +208,16 @@
 
     },
     methods: {
+
+
       searchIt(){
         let query=[]
         query = this.searchQuery.split(',')
         console.log(query[3])
         if(query[3]==='true'){
-          this.$router.push(`/catalog/${query[0]}?filter=${query[1]}&value=${query[2]}`)
+          this.$router.push(`/catalog/${query[0]}?filter=${query[1]}&value=${query[2]}&city=${this.city_id}`)
         }else {
-          this.$router.push(`/catalog/${query[0]}`)
+          this.$router.push(`/catalog/${query[0]}?city=${this.city_id}`)
         }
 
       },

@@ -364,9 +364,41 @@
       if (this.$route.query.filter){
         console.log(this.$route.query)
       this.all_filters.filter.filter(x => x.name_slug === this.$route.query['filter'])[0].value=this.$route.query['value']
+        if (this.$route.query.city){
+           this.$axios.get(`/api/v1/city/search_by_id?city_id=${this.$route.query.city}`).then((response) => {
+           console.log(response)
+           this.cities.push({
+             id:response.data.id,
+             city:response.data.city,
+           })
+
+           this.city_id = response.data.id
+
+           this.submitForm()
+         })
+
+        }
         this.submitForm()
+
       }else {
-        console.log('empty')
+        if (this.$route.query.city){
+           this.$axios.get(`/api/v1/city/search_by_id?city_id=${this.$route.query.city}`).then((response) => {
+           console.log(response)
+           this.cities.push({
+             id:response.data.id,
+             city:response.data.city,
+           })
+           this.city_id = response.data.id
+
+         })
+          this.submitForm()
+        }
+
+
+
+
+
+
       }
 
 

@@ -56,7 +56,15 @@
             </div>
             <div class="order__bottom">
               <p class="order__bottom-text">Размещено: {{new Date(order.created_at).toLocaleString()  }}</p>
-              <el-button plain><nuxt-link :to="'/orders/'+order.name_slug"> Предложить технику</nuxt-link></el-button>
+
+
+              <div class="">
+                 <p style="font-size: 11px;margin-bottom: 5px" class="color-main text-center" v-if="order.apply_units.some(v => $auth.user.units.includes(v)) ">Есть предложенная Вами техника</p>
+
+
+                 <el-button plain><nuxt-link :to="'/orders/'+order.name_slug"> Предложить технику</nuxt-link></el-button>
+              </div>
+
             </div>
           </el-card><!--  :pager-count="total_pages"        order-->
 
@@ -114,8 +122,10 @@
       console.log(params)
       try{
         const response_orders = await $axios.get(`/api/v1/order/get_orders?type_slug=all&city=${$auth.user ? $auth.user.city.id : 0}`)
+
         console.log($auth.user)
         console.log(response_orders)
+
         const total_pages = response_orders.data.page_count -1
         const orders = response_orders.data.results
 
@@ -131,6 +141,7 @@
         subscribe_text:'Подписаться на уведомления',
         subscribe:false,
         cur_type_id:0,
+        applyUnits:0,
         cur_type_name:'',
         cur_type_slug:'all',
 
@@ -138,6 +149,7 @@
       }
     },
     mounted() {
+
 
     },
     watch:{
