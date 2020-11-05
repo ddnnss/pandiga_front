@@ -375,10 +375,12 @@
            this.city_id = response.data.id
 
            this.submitForm()
+             console.log('1')
          })
 
         }
         this.submitForm()
+        console.log('2')
 
       }else {
         if (this.$route.query.city){
@@ -389,9 +391,11 @@
              city:response.data.city,
            })
            this.city_id = response.data.id
-
+          this.submitForm()
+             console.log('3')
          })
           this.submitForm()
+          console.log('4')
         }
 
 
