@@ -113,7 +113,7 @@
           </el-col>
 
         </el-row>
-        <div class="text-center"><nuxt-link to="/catalog"><el-button class="main-search__btn" type="primary">Показать все</el-button></nuxt-link> </div>
+        <div class="text-center"><nuxt-link to="/catalog/"><el-button class="main-search__btn" type="primary">Показать все</el-button></nuxt-link> </div>
       </div>
 
     </section>
