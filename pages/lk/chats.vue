@@ -78,13 +78,19 @@
                         <p>{{message.rentDate}} хочу арендовать
                           <el-popover
                             placement="top"
-                            width="400"
+                            width="350"
                             trigger="hover">
-                            <div class="">
+                            <div style="display: flex;align-items: center;justify-content: space-between">
                               <el-avatar shape="square" :size="100" :fit="'cover'" :src="message.rentUnit.images[0].image"></el-avatar>
-                              <span>Стоимость аренды {{message.rentUnit.rent_price}} Р</span>
+                              <div class="">
+                                <span>Стоимость аренды {{message.rentUnit.rent_price}} Р</span><br>
+                              <span>Размещение {{message.rentUnit.city}}</span>
+                              </div>
+
+
                             </div>
-                            <el-link class="color-white text-bold" slot="reference">{{message.rentUnit.name}}</el-link>
+                            <nuxt-link :to="`/catalog/${message.rentUnit.type.name_slug}/${message.rentUnit.name_slug}`" slot="reference" class=" text-bold">{{message.rentUnit.name}}</nuxt-link>
+<!--                            <el-link  ></el-link>-->
                           </el-popover>
                           в период с {{message.rentStartTime}} по {{message.rentEndTime}}</p>
 <!--                        <el-button v-if="!$auth.user.is_customer" type="info" plain>Принять</el-button>-->
@@ -99,7 +105,7 @@
                               <el-avatar shape="square" :size="100" :fit="'cover'" :src="message.rentUnit.images[0].image"></el-avatar>
                               <span>Стоимость аренды {{message.rentUnit.rent_price}} Р</span>
                             </div>
-                            <el-link class="color-white text-bold" slot="reference">{{message.rentUnit.name}}</el-link>
+                            <el-link class=" text-bold" slot="reference">{{message.rentUnit.name}}</el-link>
                           </el-popover>
                           c {{message.rentStartDate}} по {{message.rentEndDate}}
                         </p>

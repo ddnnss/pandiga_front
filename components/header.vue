@@ -5,7 +5,7 @@
 
     <div class="header-wrapper">
       <div class="header-logo">
-        <nuxt-link :to="'/'"><img src="/logo.png" alt=""></nuxt-link>
+        <nuxt-link :to="'/'"><img src="/logo.svg" alt=""></nuxt-link>
         <p v-if="this.$auth.loggedIn && this.$auth.user.is_customer" class="header-logo__type">Заказчик</p>
         <p v-if="this.$auth.loggedIn && !this.$auth.user.is_customer" class="header-logo__type">Исполнитель</p>
 
