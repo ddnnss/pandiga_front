@@ -89,7 +89,7 @@
                 <p v-else  class="item-owner__name">{{unit.owner.organization_name}}</p>
                 <div v-if="unit.owner.rate_times > 0" class="catalog-item__rating mb-10">
                   <p class="catalog-item__rating-p">{{unit.owner.rating}} </p>
-                  <span class="catalog-item__rating-span">{{unit.owner.rate_times}} отзыв</span>
+                  <span class="catalog-item__rating-span">Отзывов: {{unit.owner.rate_times}}</span>
                 </div>
                 <p class="item-owner__location">{{unit.city}}</p>
               </div>

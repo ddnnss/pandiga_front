@@ -19,8 +19,15 @@
           <p v-else class="user-profile__info-status color-main">Оффлайн<br>Последняя активность {{new Date(user.last_online).toLocaleString()}}</p>
           <p v-if="user.is_person" class="user-profile__info-name">{{user.fullname}}</p>
           <p v-else class="user-profile__info-name">{{user.organization_name}}</p>
-          <p v-if="!user.is_person">ИНН: {{user.inn}}</p>
-          <p v-if="!user.is_person">ОГРН: {{user.ogrn}}</p>
+          <div v-if="user.rate_times > 0" class="catalog-item__rating mb-10">
+            <p class="catalog-item__rating-p">{{user.rating}} </p>
+            <span class="catalog-item__rating-span">Отзывов: {{user.rate_times}}</span>
+          </div>
+          <div class="mb-10">
+             <p v-if="!user.is_person">ИНН: {{user.inn}}</p>
+              <p v-if="!user.is_person">ОГРН: {{user.ogrn}}</p>
+          </div>
+
           <p class="user-profile__info-location">{{user.city.city}}</p>
         </div>
         <div class="user-profile__button">

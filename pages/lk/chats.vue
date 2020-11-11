@@ -13,8 +13,9 @@
             <el-card shadow="never" class="chat-users" :body-style="{padding:'0'}">
 
               <div  v-for="chat in chats" :key="chat.id" @click="openChat(chat.id)">
-                <div v-if="chat.starter.id === $auth.user.id" class="chat-user">
-                  <div class="chat-user__img">
+
+                <div v-if="chat.starter.id === $auth.user.id" class="chat-user" :class="{'chatUnread':chat.isNewMessages}">
+                  <div class="chat-user__img">'
                     <img  :src="chat.opponent.avatar" alt="">
                   </div>
                   <div class="chat-user__info">
@@ -32,7 +33,7 @@
                     <p class="chat-user__date-p">{{new Date(chat.updatedAt).toLocaleString()}}</p>
                   </div>
                 </div>
-                <div v-if="chat.opponent.id === $auth.user.id" class="chat-user">
+                <div v-if="chat.opponent.id === $auth.user.id" class="chat-user" :class="{'chatUnread':chat.isNewMessages}">
                   <div class="chat-user__img">
                      <img  :src="chat.starter.avatar" alt="">
                   </div>
@@ -206,7 +207,8 @@
           this.chat_messages = response.data
           console.log(this.chat_messages)
           this.current_chat_id = chat_id
-          //await this.$axios.post(`/api/v1/chat/set_chat_read/${chat_id}`)
+          await this.$axios.post(`/api/v1/chat/set_chat_read/${chat_id}`)
+          this.getChats()
         }else{
           console.log('chat error')
         }
@@ -236,9 +238,6 @@
         await this.$axios.post(`/api/v1/chat/add/${this.current_chat_id}`,{message:this.new_msg})
           .then((response) => {
             console.log(response.status);
-
-
-
             // this.chat_messages.push({
             //     createdAt: Date.now(),
             //     message: this.new_msg,
@@ -247,6 +246,7 @@
             // )
             console.log(this.chat_messages)
             this.new_msg =''
+            this.getChats()
           })
           .then(response => {
             console.log('response1')

@@ -37,7 +37,6 @@
               </div>
         </div>
         <div class="order__bottom">
-
             <p class="order__bottom-text">Размещено: {{new Date(order.created_at).toLocaleString()  }}</p>
 
 
@@ -78,8 +77,12 @@
           <nuxt-link :to="`/catalog/${unit.type.name_slug}/${unit.name_slug}/`"><p class="technique-card__name">{{unit.name}}</p></nuxt-link>
 
           <p class="technique-card__price mb-20">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> час</span> <span v-if="!unit.rent_type"> день</span> </p>
-          <el-button v-if="!order.apply_units.includes(unit.id)" @click="applyUnit(unit.id)" plain class="full-w">Предложить</el-button>
+          <div v-if="!order.decline_units.includes(unit.id)">
+             <el-button v-if="!order.apply_units.includes(unit.id)" @click="applyUnit(unit.id)" plain class="full-w">Предложить</el-button>
           <el-button v-else  plain class="full-w">Техника уже предложена</el-button>
+          </div>
+          <div v-else><p class="color-main">Заказчик отказал</p></div>
+
 
         </el-card>
       </div>

@@ -17,6 +17,10 @@
           <div class="user-profile__info">
             <p v-if="this.$auth.user.is_person" class="user-profile__info-name">{{userData.first_name}} {{userData.last_name}}</p>
             <p v-if="!this.$auth.user.is_person" class="user-profile__info-name">{{userData.organization_name}}<br>ИНН: {{userData.inn}}<br>ОГРН: {{userData.ogrn}}</p>
+            <div v-if="this.$auth.user.rate_times > 0" class="catalog-item__rating mb-10">
+            <p class="catalog-item__rating-p">{{this.$auth.user.rating}} </p>
+            <span class="catalog-item__rating-span">Отзывов: {{this.$auth.user.rate_times}}</span>
+          </div>
             <p class="user-profile__info-location">{{userData.city}}</p>
           </div>
           <div class="user-profile__button">

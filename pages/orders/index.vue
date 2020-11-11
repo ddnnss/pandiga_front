@@ -50,7 +50,7 @@
                 <p class="order__middle-info">Размещено заявок: {{order.owner.orders_count}}</p>
                  <div v-if="order.owner.rate_times > 0" class="catalog-item__rating mb-10">
                   <p class="catalog-item__rating-p">{{order.owner.rating}} </p>
-                  <span class="catalog-item__rating-span">{{order.owner.rate_times}} отзыв</span>
+                  <span class="catalog-item__rating-span">Отзывов: {{order.owner.rate_times}} </span>
                 </div>
               </div>
             </div>
