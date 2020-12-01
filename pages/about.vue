@@ -1,28 +1,39 @@
 <template>
 
-   <section class="catalog-page">
+  <section class="catalog-page">
 
-     <div class="container">
-       <h1 class="section-header mb-60">Что такое Pandiga?</h1>
-       <p class="mb-20">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, delectus dolorem illum nam natus officia officiis quis quisquam ut voluptates. Accusamus atque autem deserunt dicta sapiente sequi? Laudantium, maxime, quasi?</p>
-       <p class="mb-20">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, delectus dolorem illum nam natus officia officiis quis quisquam ut voluptates. Accusamus atque autem deserunt dicta sapiente sequi? Laudantium, maxime, quasi?</p>
-       <p class="mb-35">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, delectus dolorem illum nam natus officia officiis quis quisquam ut voluptates. Accusamus atque autem deserunt dicta sapiente sequi? Laudantium, maxime, quasi?</p>
-       <p style="cursor: pointer" class="color-main mb-20">Как клиенту выбрать специалиста?</p>
-       <p style="cursor: pointer" class="color-main mb-20">Как специалисту найти заказ?</p>
-       <p style="cursor: pointer" class="color-main mb-60">Кто отвечает за результат?</p>
+    <div class="container">
+      <h1 class="section-header mb-20">Что такое Pandiga?</h1>
+      <p class="mb-20">PANDIGA — это рекомендательный сервис по аренде абсолютно любой технике и строительному инструменту,
+        а так же подбору специалистов для выполнения абсолютно любой работы. </p>
 
-       <h3 class="section-header mb-20">Как клиенту выбрать специалиста?</h3>
-       <p class="mb-20">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, delectus dolorem illum nam natus officia officiis quis quisquam ut voluptates. Accusamus atque autem deserunt dicta sapiente sequi? Laudantium, maxime, quasi?</p>
-       <p class="mb-35">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, delectus dolorem illum nam natus officia officiis quis quisquam ut voluptates. Accusamus atque autem deserunt dicta sapiente sequi? Laudantium, maxime, quasi?</p>
- <h3 class="section-header mb-20">Как клиенту выбрать специалиста?</h3>
-       <p class="mb-20">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, delectus dolorem illum nam natus officia officiis quis quisquam ut voluptates. Accusamus atque autem deserunt dicta sapiente sequi? Laudantium, maxime, quasi?</p>
-       <p class="mb-35">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, delectus dolorem illum nam natus officia officiis quis quisquam ut voluptates. Accusamus atque autem deserunt dicta sapiente sequi? Laudantium, maxime, quasi?</p>
+      <p class="mb-20">У нас можно найти спецтехнику, легковые
+        и грузовые авто, лимузины, автобусы, автодома, водную технику, мото-технику, авиа-технику, скутеры и велосипеды,
+        а так же различный строительный инструмент. Так же вы можете найти профессиональных специалистов для выполнения
+        любой работы или задания. К вашим услугам огромное количество техники с фотографиями, полной информацией и, что важно,
+        с реальными отзывами заказчиков.</p>
+
+      <h3 class="section-header mb-20">Каким образом отзывы появляются на PANDIGA?</h3>
+      <p  class="mb-20">Когда заказчик подтвердит, что арендованная техника отработала необходимое время мы попросим его
+        оставить свой отзыв. Это можно сделать на сайте или в мобильном приложении. Все отзывы в клубе настоящие.
+        Опубликовать его может только тот заказчик, который арендовал технику на PANDIGA. Вас мы тоже попросим поделиться
+        своим мнением о технике исполнителя. Так вы поможете одноклубникам сделать правильный выбор. Но не забывайте, что
+        в свою очередь, владелец техники тоже поставит Вам оценку и оставит отзыв о работе с Вами.</p>
+      <h3 class="section-header mb-20">Как найти и выбрать лучшую технику в аренду?</h3>
+      <p class="mb-20">Просто введите в строку поиска нужную Вам технику, адрес и срок, на который Вам нужна эта техника. На вашу заявку откликнутся несколько владельцев, и вы сможете выбрать лучшего: по цене, отзывам и оценкам. Выбранный владелец техники получит ваши контакты, и вы сможете обо всем договориться.</p>
+      <h3 class="section-header mb-20"> Я могу доверять PANDIGA? </h3>
+      <p class="mb-20">Наша основная задача — дать как можно больше информации о технике, чтобы вы были уверены в том, что получите именно то что хотите. Главная ценность PANDIGA – Ваше доверие! Проверка всей техники в базе клуба - приоритетное направление нашего развития. Вся техника появляется в базе только после тщательной проверки. Однако главное, на что мы просим вас обращать большое внимание при выборе техники это отзывы клиентов.</p>
+      <h3 class="section-header mb-20"> Кто отвечает за результат? </h3>
+      <p class="mb-20">Ответственность лежит на владельце техники, которую вы выберете. Поэтому мы советуем обязательно заключать договор аренды техники, фиксировать передачу денег, составлять сметы.</p>
+      <h3 class="section-header mb-20"> Как защититься от сложных ситуаций? </h3>
+      <p class="mb-20">Все наши усилия по проверке техники не должны заменять для вас общих правил безопасности. Вы же понимаете, каждый день на PANDIGA регистрируются десятки новых пользователей. Мы проверяем технику, сдаваемую в аренду, а не его владельца. Поэтому это не может быть гарантией полной безопасности. Обязательно проверяйте документы у человека, с которым собираетесь сотрудничать. Соблюдение этого простого правила защитит вас от многих неприятностей. Сразу сообщайте нам, если возникают сложности во время работы по заявке.</p>
+      <h3 class="section-header mb-20"> Почему PANDIGA бесплатный? </h3>
+      <p class="mb-20">Сервис PANDIGA всегда бесплатный только для заказчиков. Все услуги по организации работы оплачивают исполнители и владельцы техники. При этом для ВСЕХ регистрация в клубе бесплатная.</p>
 
 
 
-
-     </div>
-   </section>
+    </div>
+  </section>
 
 
 

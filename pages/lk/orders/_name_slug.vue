@@ -24,8 +24,8 @@
             <p class="order__text">Описание: {{order.comment}}</p>
 
 
-            <div class="order__middle">
-
+            <div v-if="order.worker" class="order__middle">
+            <p>Телефон исполнителя: {{order.worker.phone}}</p>
 
             </div>
             <div class="order__bottom">

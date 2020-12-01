@@ -20,9 +20,9 @@
           </el-col>
            <el-col :xs="24" :sm="24" :md="12" :lg="6">
             <ul class="footer-list">
-              <li class="footer-list__item"><a class="footer-list__link" href="">Пользовательское соглашение</a></li>
-              <li class="footer-list__item"><a class="footer-list__link" href="">Политика конфиденциальности</a></li>
-              <li class="footer-list__item"><a class="footer-list__link" href="">Карта сайта</a></li>
+              <li class="footer-list__item"> <nuxt-link class="footer-list__link" to="rules">Условия использования</nuxt-link> </li>
+              <li class="footer-list__item"> <nuxt-link class="footer-list__link" to="private-policy">Политика конфиденциальности</nuxt-link> </li>
+
             </ul>
           </el-col>
          </el-row>

@@ -19,7 +19,11 @@
             </div>
             <p class="order__text">Требуется {{order.type.name_lower}} c характеристиками: <span v-for="(filter,key) in order.filter">{{filter}}: {{order.filter_value[key]}} | </span></p>
             <p class="order__text">Описание: {{order.comment}}</p>
-            <div class="order__middle">
+
+              <div v-if="!order.is_finished" class="order__middle">
+            <p>Телефон заказчика: {{order.owner.phone}}</p>
+
+
             </div>
             <div class="order__bottom">
               <el-tag v-if="!order.is_finished" type="warning" class="order__bottom-text text-bold">Выполнятся с: {{new Date(order.update_at).toLocaleString()  }}</el-tag>
