@@ -74,7 +74,7 @@
           <img class="feedback__top-img" :src="feedback.author.avatar" alt="">
           <div class="feedback__top-from">
             <nuxt-link :to="'/user/'+feedback.author.id"><p class="feedback__top-from-name">{{feedback.author.fullname}}</p></nuxt-link>
-            <p class="feedback__top-from-date">{{new Date(feedback.created_at).toLocaleString()}}</p>
+            <p class="feedback__top-from-date">{{new Date(feedback.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}</p>
           </div>
         </div>
         <div class="feedback__text">

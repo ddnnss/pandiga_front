@@ -30,7 +30,7 @@
                     </p>
                   </div>
                   <div class="chat-user__date">
-                    <p class="chat-user__date-p">{{new Date(chat.updatedAt).toLocaleString()}}</p>
+                    <p class="chat-user__date-p">{{new Date(chat.updatedAt).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}</p>
                   </div>
                 </div>
                 <div v-if="chat.opponent.id === $auth.user.id" class="chat-user" :class="{'chatUnread':chat.isNewMessages}">
@@ -49,7 +49,7 @@
                     </p>
                   </div>
                   <div class="chat-user__date">
-                    <p class="chat-user__date-p">{{new Date(chat.updatedAt).toLocaleString()}}</p>
+                    <p class="chat-user__date-p">{{new Date(chat.updatedAt).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}</p>
                   </div>
                 </div>
               </div><!--chat-user-->
@@ -71,7 +71,7 @@
                   <div class="chat-content__messages-message-inner">
                     <nuxt-link :to="'/user/'+message.user.id">
                       <p class="chat-content__messages-message-inner-name">{{message.user.fullname}}
-                      <span>{{new Date(message.createdAt).toLocaleString()}}</span></p>
+                      <span>{{new Date(message.createdAt).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}</span></p>
                     </nuxt-link>
                     <p class="chat-content__messages-message-inner-text">{{message.message}}</p>
                     <el-card class=" mt-10" v-if="message.isRentMessage" shadow="never">

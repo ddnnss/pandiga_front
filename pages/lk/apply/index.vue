@@ -40,7 +40,7 @@
             </div>
             <div class="order__bottom">
               <div v-if="!order.is_finished">
-                <p v-if="!order.worker" class="order__bottom-text">Размещено: {{new Date(order.created_at).toLocaleString()  }}<br>
+                <p v-if="!order.worker" class="order__bottom-text">Размещено: {{new Date(order.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")  }}<br>
               Просмотров: {{order.views }}<br>
               Предложений: {{order.apply_units.length }}</p>
               <el-tag type="warning" v-if="order.worker" class="order__bottom-text color-main text-bold">Выполнятся с: {{new Date(order.update_at).toLocaleString()  }}</el-tag>
@@ -82,7 +82,7 @@
 
             </div>
             <div class="order__bottom">
-              <p v-if="!order.worker" class="order__bottom-text">Размещено: {{new Date(order.created_at).toLocaleString()  }}<br>
+              <p v-if="!order.worker" class="order__bottom-text">Размещено: {{new Date(order.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")  }}<br>
               Просмотров: {{order.views }}<br>
               Предложений: {{order.apply_units.length }}</p>
               <p v-else class="order__bottom-text color-main text-bold">Выполнятся с: {{new Date(order.update_at).toLocaleString()  }}</p>

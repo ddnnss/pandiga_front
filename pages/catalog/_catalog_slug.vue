@@ -60,7 +60,7 @@
 <!--              <p class="catalog-item__info-subtitle">2.5 л ( 174 л.c.), дизель, автомат, 4WD</p>-->
               <p class="catalog-item__info-subtitle grey mobile-hide">Мин. время заказа: от {{unit.min_rent_time}} <span v-if="unit.rent_type"> ч</span> <span v-if="!unit.rent_type"> д</span></p>
               <p class="catalog-item__price-summ mobile-show">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> ч</span> <span v-if="!unit.rent_type"> д</span></p>
-              <span class="catalog-item__rating-span mobile-show">{{unit.city}} {{new Date(unit.created_at).toLocaleDateString()}}</span>
+              <span class="catalog-item__rating-span mobile-show">{{unit.city}} {{new Date(unit.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}</span>
 
               <div v-if="$auth.loggedIn" class="">
                 <div v-if="$auth.user.is_customer && unit.owner !== $auth.user.id" class="catalog-item__info-btn">
@@ -93,7 +93,7 @@
                 <p class="catalog-item__rating-p">{{unit.rating}} </p>
                 <span class="catalog-item__rating-span">{{unit.rate_times}} отзыв</span>
               </div>
-              <span class="catalog-item__rating-span">{{unit.city}} {{new Date(unit.created_at).toLocaleDateString()}}</span>
+              <span class="catalog-item__rating-span">{{unit.city}} {{new Date(unit.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}</span>
             </div>
           </div><!--catalog-item-->
           <div v-if="technique_units.length === 0" class="">

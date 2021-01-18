@@ -11,13 +11,13 @@
 
             </ul>
           </el-col>
-            <el-col :xs="8" :sm="12" :md="8" :lg="8" class="mb-10">
-            <ul class="footer-list">
-              <li class="footer-list__item"><nuxt-link class="footer-list__link" to="/faq">FAQ</nuxt-link></li>
-              <li class="footer-list__item"><nuxt-link class="footer-list__link" to="/faq#form">Обратная свзяь</nuxt-link></li>
+<!--            <el-col :xs="8" :sm="12" :md="8" :lg="8" class="mb-10">-->
+<!--            <ul class="footer-list">-->
+<!--              <li class="footer-list__item"><nuxt-link class="footer-list__link" to="/faq">FAQ</nuxt-link></li>-->
+<!--              <li class="footer-list__item"><nuxt-link class="footer-list__link" to="/faq#form">Обратная свзяь</nuxt-link></li>-->
 
-            </ul>
-          </el-col>
+<!--            </ul>-->
+<!--          </el-col>-->
            <el-col :xs="24" :sm="24" :md="12" :lg="6">
             <ul class="footer-list">
               <li class="footer-list__item"> <nuxt-link class="footer-list__link" to="rules">Условия использования</nuxt-link> </li>

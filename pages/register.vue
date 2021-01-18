@@ -60,7 +60,7 @@
 <!--              <p class="login-box__soсial-item-name">VK</p>-->
 <!--            </div>-->
 <!--          </div>-->
-          <p class="login-box__no-acc">Уже есть аккаунт? <a href="">Войти</a> </p>
+          <p class="login-box__no-acc">Уже есть аккаунт? <nuxt-link to="/login">Войти</nuxt-link></p>
         </div>
       </el-card>
       <el-card v-if="phone_check_panel" class="login-box">

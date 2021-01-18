@@ -26,7 +26,7 @@
 
             </div>
             <div class="order__bottom">
-              <el-tag v-if="!order.is_finished" type="warning" class="order__bottom-text text-bold">Выполнятся с: {{new Date(order.update_at).toLocaleString()  }}</el-tag>
+              <el-tag v-if="!order.is_finished" type="warning" class="order__bottom-text text-bold">Выполнятся с: {{new Date(order.update_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")  }}</el-tag>
               <el-tag v-else type="success" class="order__bottom-text text-bold">Выполнено</el-tag>
               <!--              <el-button v-if="order.worker && !order.is_finished" @click="closeOrder(order.id)" type="primary">Завершить</el-button>-->
             </div>

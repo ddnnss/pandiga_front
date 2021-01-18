@@ -22,7 +22,7 @@
       prop="created_at"
       label="Дата">
        <template slot-scope="scope">
-        <p> {{new Date(scope.row.created_at).toLocaleString()}}</p>
+        <p> {{new Date(scope.row.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}</p>
       </template>
     </el-table-column>
 

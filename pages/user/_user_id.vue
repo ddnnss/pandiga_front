@@ -16,7 +16,9 @@
         </div>
         <div class="user-profile__info">
           <p v-if="user.is_online" class="user-profile__info-status">Онлайн</p>
-          <p v-else class="user-profile__info-status color-main">Оффлайн<br>Последняя активность {{new Date(user.last_online).toLocaleString()}}</p>
+          <p v-else class="user-profile__info-status color-main">Оффлайн<br>Последняя активность
+            {{new Date(user.last_online).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}
+          </p>
           <p v-if="user.is_person" class="user-profile__info-name">{{user.fullname}}</p>
           <p v-else class="user-profile__info-name">{{user.organization_name}}</p>
           <div v-if="user.rate_times > 0" class="catalog-item__rating mb-10">
@@ -31,7 +33,9 @@
           <p class="user-profile__info-location">{{user.city.city}}</p>
         </div>
         <div class="user-profile__button">
-          <p>Дата регистрации: {{new Date(user.date_joined).toLocaleString()}}<br><p>{{user.orders_count}} опубликовано завок<br>{{user.rent_count}} сдавал в аренду</p>
+          <p>Дата регистрации:
+            {{new Date(user.date_joined).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}
+            <br><p>{{user.orders_count}} опубликовано заявок<br>{{user.rent_count}} сдавал в аренду</p>
         </div>
       </div>
       <div v-if="!user.is_customer">
@@ -57,7 +61,7 @@
                   <img class="feedback__top-img" :src="feedback.author.avatar" alt="">
                   <div class="feedback__top-from">
                    <nuxt-link :to="'/user/'+feedback.author.id"><p class="feedback__top-from-name">{{feedback.author.fullname}}</p></nuxt-link>
-                    <p class="feedback__top-from-date">{{new Date(feedback.created_at).toLocaleString()}}</p>
+                    <p class="feedback__top-from-date">{{new Date(feedback.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}</p>
                   </div>
                 </div>
                 <div class="feedback__text">

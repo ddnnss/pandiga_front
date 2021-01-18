@@ -55,7 +55,7 @@
               </div>
             </div>
             <div class="order__bottom">
-              <p class="order__bottom-text">Размещено: {{new Date(order.created_at).toLocaleString()  }}</p>
+              <p class="order__bottom-text">Размещено: {{new Date(order.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")  }}</p>
 
 
               <div class="">
