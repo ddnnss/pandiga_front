@@ -358,25 +358,29 @@
         }
       },
       sendSMS(){
-        this.step1_btn_loading = true
-        this.$axios.post('/api/v1/user/sendSMS/',{phone:this.registerForm.phone})
-          .then((response) => {
-            console.log(response.data);
-            // TODO Изменить проверку позже
-            if (response.data['result']){
-              this.sms_code=response.data['code']
+        // this.step1_btn_loading = true
+        // this.$axios.post('/api/v1/user/sendSMS/',{phone:this.registerForm.phone})
+        //   .then((response) => {
+        //     console.log(response.data);
+        //     // TODO Изменить проверку позже
+        //     if (response.data['result']){
+        //       this.sms_code=response.data['code']
+        //       this.phone_panel=false;
+        //       this.phone_check_panel=true;
+        //       this.active_step +=1
+        //     }
+        //     else {
+        //       this.step1_btn_loading = false
+        //       this.phone_error = true
+        //     }
+        //   })
+        //   .catch(function (error) {
+        //     console.log('error sms sending',error);
+        //   })
+        this.sms_code='0000'
               this.phone_panel=false;
               this.phone_check_panel=true;
               this.active_step +=1
-            }
-            else {
-              this.step1_btn_loading = false
-              this.phone_error = true
-            }
-          })
-          .catch(function (error) {
-            console.log('error sms sending',error);
-          })
       },
       checkSMS(){
         // TODO Изменить проверку позже
@@ -401,7 +405,9 @@
 
             }
             if (formName==='phoneCheckForm'){
+
               this.checkSMS()
+
             }
           } else {
             console.log('error submit!!');
