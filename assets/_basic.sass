@@ -293,3 +293,27 @@ section
     left: 0 !important
   .item-info
     margin-left: 0 !important
+
+
+.imgDialog
+  & .el-dialog
+    width: 900px !important
+    max-width: 900px !important
+    &__body
+      padding: 0
+    &__header
+      padding: 0
+
+
+@media (max-width: 560px)
+  .imgDialog
+    & .el-dialog
+      width: 95% !important
+      max-width: unset !important
+
+.el-pagination.is-background .el-pager li:not(.disabled).active
+  background-color: $main-color!important
+.el-pagination.is-background .el-pager li:not(.disabled).active:hover
+  color: #FFFFFF !important
+.el-pagination.is-background .el-pager li:not(.disabled):hover
+  color: $main-color!important

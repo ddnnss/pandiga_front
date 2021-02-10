@@ -5,7 +5,7 @@
         </div>
 
         <div class="card-img">
-            <img :src="currentImage" alt="">
+            <img @click="imgDialog = !imgDialog" :src="currentImage" alt="">
             <div class="actions">
                 <span @click="prevImage" class="prev">
                     &#8249;
@@ -25,6 +25,9 @@
                 <img :src="image.image_thumb">
             </div>
         </div>
+      <el-dialog class="imgDialog" :visible.sync="imgDialog"  >
+        <img style="width: 100%" :src="currentImage" alt="">
+</el-dialog>
 
     </div>
 </template>
@@ -34,6 +37,7 @@ export default {
     name: 'Carousel',
     data() {
         return {
+          imgDialog:false,
             base_url:'http://localhost:8000',
             //Index of the active image
             activeImage: 0,
@@ -203,8 +207,13 @@ margin-bottom: 0;
 }
 
 .card-img > img {
+
     display: block;
     margin: 0 auto;
+  width: 610px;
+  height: 410px;
+  object-fit: contain;
+  cursor: pointer;
 }
 
 .actions {

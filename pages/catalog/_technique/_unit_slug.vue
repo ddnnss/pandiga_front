@@ -103,9 +103,13 @@
               <p>{{unit.description}}</p>
             </el-tab-pane>
             <el-tab-pane label="Характеристики" name="second">
+
+
+
               <ul  style="columns: 2; width: 80%">
-                <li class="item-description__feature" v-for="item,index in unit.filter">
-                  <p>{{item}}: <span>{{unit.filter_value[index]}}</span></p>
+                <li class="item-description__feature" v-for="(item,index) in unit.filter">
+
+                  <p>{{item.placeholder}}: <span>{{unit.filter_value.find(x=>x.filter === item.id).label}}</span></p>
                 </li>
               </ul>
             </el-tab-pane>

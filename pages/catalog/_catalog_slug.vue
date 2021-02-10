@@ -96,12 +96,19 @@
               <span class="catalog-item__rating-span">{{unit.city}} {{new Date(unit.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}}</span>
             </div>
           </div><!--catalog-item-->
+
+          <el-pagination class="mb-50" background layout="prev, pager, next"
+                         :hide-on-single-page="true"
+                         :page-count="page_count" @current-change="paginatorChange">
+          </el-pagination>
+
           <div v-if="technique_units.length === 0" class="">
             <p class="section-header fg-10 text-center">Нет информации по Вашему запросу</p>
           </div>
         </div>
         <div class="catalog-inner__right sticky-block mb-35">
           <div class="filter-wrapper ">
+
             <el-form :model="all_filters" label-width="120px" >
 
               <div class="filter-group" v-for="(filter,index) in all_filters.filter">
@@ -197,7 +204,7 @@
               </el-select>
 
               </div>
-              <el-button type="primary" class="full-w" @click="submitForm">Поиск</el-button>
+              <el-button type="primary" class="full-w" @click="submitForm(1)">Поиск</el-button>
             </el-form>
 
           </div>
@@ -273,16 +280,20 @@
         const  response_type = await $axios.get(`/api/v1/technique/type/${params.catalog_slug}`)
         const  response_filters = await $axios.get(`/api/v1/technique/filters/${params.catalog_slug}/`)
         const technique_units = response_units.data.results
+        const page_count = response_units.data.page_count
+        const links = response_units.data.links
         const items_count = technique_units.length
 
         const technique_type = response_type.data
         const technique_filters = response_filters.data
 
-        console.log(technique_units)
+        console.log(technique_units,page_count,links)
         return {
           items_count ,
           technique_units,
           technique_type,
+          page_count,
+          links,
           all_filters:{
             filter: technique_filters
           }
@@ -294,6 +305,8 @@
     },
     data() {
       return {
+        is_filtered:false,
+
         dateOptions: {
           disabledDate(time) {
             return time.getTime() < Date.now();
@@ -371,15 +384,12 @@
              id:response.data.id,
              city:response.data.city,
            })
-
            this.city_id = response.data.id
-
-           this.submitForm()
+           this.submitForm(1)
              console.log('1')
          })
-
         }
-        this.submitForm()
+        this.submitForm(1)
         console.log('2')
 
       }else {
@@ -391,23 +401,28 @@
              city:response.data.city,
            })
            this.city_id = response.data.id
-          this.submitForm()
+          this.submitForm(1)
              console.log('3')
          })
-          this.submitForm()
+          this.submitForm(1)
           console.log('4')
         }
-
-
-
-
-
-
       }
-
-
     },
     methods: {
+     async paginatorChange(page){
+        console.log(page)
+       let  response_units
+       if (!this.is_filtered){
+            response_units = await this.$axios.get(`/api/v1/technique/units?page=${page}&type=${this.$route.params.catalog_slug}`)
+         this.technique_units = response_units.data.results
+       }
+       else {
+           this.submitForm(page)
+       }
+
+
+      },
       async searchCity(query){
         if (query !== '' && query.length >= 2) {
           console.log(query)
@@ -493,15 +508,14 @@
 
           });
       },
-      async submitForm(){
+      async submitForm(page){
         await this.$axios({
           method: 'post',
           headers:{
             'Content-Type':'application/json'
           },
-          url: '/api/v1/technique/filter/',
+          url: `/api/v1/technique/filter/?page=${page}`,
           data: JSON.stringify({
-
               technique_type:this.technique_type.name_slug,
               rent_time_to:(this.rent_time_to ? this.rent_time_to : 1000),
               rent_time_from:(this.rent_time_from ? this.rent_time_from : 0),
@@ -510,16 +524,16 @@
               rent_type:  this.rent_type  ,
               city_id:  this.city_id  ,
               order_by:  this.order_by_value  ,
-
               'primary_filter': this.all_filters.filter
-
             }
           )
         }).then((response) => {
           // handle success
           console.log('success');
           this.technique_units =response.data.results
-          console.log('items_count posrtt',this.technique_units.length)
+          this.is_filtered = true
+          this.page_count = response.data.page_count
+          console.log('items_count posrtt',response.data)
         })
           .catch(function (error) {
             // handle error
