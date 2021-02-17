@@ -46,9 +46,41 @@ section
     width: unset
     height: unset
 
+.el-textarea__inner
+  &:focus
+    border-color: $main-color !important
+  &:active
+    border-color: $main-color !important
+.el-time-panel__btn.confirm
+  color: $main-color !important
+.el-date-table td.current:not(.disabled) span
+  background-color: $main-color !important
+.el-date-table td.today span
+  color: $main-color !important
+.el-date-table td.available:hover
+  color: $main-color !important
+.el-date-picker__header-label.active, .el-date-picker__header-label:hover
+  color: $main-color !important
+.el-month-table td.current:not(.disabled) .cell
+  color: $main-color !important
+.el-year-table td .cell:hover, .el-year-table td.current:not(.disabled) .cell
+  color: $main-color !important
+.el-month-table td .cell:hover
+  color: $main-color !important
+.el-picker-panel__icon-btn:hover
+  color: $main-color !important
+
+
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover
+  color: $main-color !important
+  background-color: #ffdada !important
+.el-breadcrumb__inner a:hover, .el-breadcrumb__inner.is-link:hover
+  color: $main-color !important
 .el-link.el-link--default
   &:hover
     color: $main-color !important
+    &:after
+      border-color: $main-color !important
 .el-drawer__body
   overflow-y: auto
 .el-tabs
@@ -204,8 +236,19 @@ section
   grid-gap: 20px
 
 .technique-card
+  position: relative
   box-sizing: border-box
-
+  & .el-card__body
+    padding: 0
+  &__status
+    position: absolute
+    top: 20px
+    left: 20px
+    z-index: 10
+  &__block
+    display: flex
+    align-items: center
+    justify-content: space-between
   background: $section-grey-bg
   padding: 15px
   &__img
@@ -317,3 +360,10 @@ section
   color: #FFFFFF !important
 .el-pagination.is-background .el-pager li:not(.disabled):hover
   color: $main-color!important
+
+
+@media (max-width: 768px)
+  .el-form-item
+    margin-bottom: 0 !important
+    &__content
+      margin-left: 0 !important

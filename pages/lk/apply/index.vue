@@ -25,7 +25,9 @@
 
             </div>
             <p class="order__text">Тип техники : {{order.type.name_lower}}<br>
-            Характеристики : <span v-for="(filter,key) in order.filter">{{filter}}: {{order.filter_value[key]}} | </span></p>
+            Характеристики : <span class="order__filters" v-for="(filter,key) in order.filter">
+                {{filter.placeholder}}: {{order.filter_value.find(x=>x.filter === filter.id).label}}</span>
+            </p>
 
             <div v-if="order.comment">
               <el-tooltip  v-if="order.comment.length > 11" class="item" effect="light" :content="order.comment" placement="bottom-start">

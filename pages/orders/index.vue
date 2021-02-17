@@ -33,15 +33,12 @@
 
             </div>
             <p class="order__text">Тип техники : {{order.type.name_lower}}</p>
-
             <div v-if="order.comment">
               <el-tooltip v-if="order.comment.length > 11" class="item" effect="light" :content="order.comment" placement="bottom-start">
                 <p  style="cursor: pointer; display: inline-block" class="order__text">{{order.comment.substring(0,10)}}...</p>
               </el-tooltip>
-
               <p v-else class="order__text">{{order.comment}}</p>
             </div>
-
             <div class="order__middle">
               <img class="order__middle-img" :src="order.owner.avatar" alt="">
               <div class="order__middle-group">
@@ -56,18 +53,13 @@
             </div>
             <div class="order__bottom">
               <p class="order__bottom-text">Размещено: {{new Date(order.created_at).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")  }}</p>
-
-
               <div class="">
-                 <p style="font-size: 11px;margin-bottom: 5px" class="color-main text-center" v-if="order.apply_units.some(v => $auth.user.units.includes(v)) ">Есть предложенная Вами техника</p>
 
-
+                 <p style="font-size: 11px;margin-bottom: 5px" class="color-main text-center" v-if="order.apply_units.some(v =>$auth.user.units.includes(v)) ">Есть предложенная Вами техника</p>
                  <el-button plain><nuxt-link :to="'/orders/'+order.name_slug"> Предложить технику</nuxt-link></el-button>
               </div>
-
             </div>
           </el-card><!--  :pager-count="total_pages"        order-->
-
           <el-pagination
             @current-change="pageChange"
             :hide-on-single-page="true"
@@ -75,8 +67,6 @@
             :page-size="2"
             layout="prev, pager, next">
           </el-pagination>
-
-
         </div>
         <div class="orders-right  h-fit  sticky-block">
           <el-card shadow="always">
@@ -88,25 +78,11 @@
               </ul>
             </el-collapse-item>
           </el-collapse>
-
     </el-card>
-
-
-
-
         </div>
       </div>
-
-
-
-
-
     </div>
   </section>
-
-
-
-
 </template>
 
 <script>

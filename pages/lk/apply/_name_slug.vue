@@ -17,7 +17,11 @@
               <el-tag v-if="order.rent_type" effect="plain" type="info">на {{order.rentDate}} с {{order.rentStartTime}} до {{order.rentEndTime}} </el-tag>
               <el-tag v-else effect="plain" type="info">с {{order.rentStartDate}} до {{order.rentEndDate}}</el-tag>
             </div>
-            <p class="order__text">Требуется {{order.type.name_lower}} c характеристиками: <span v-for="(filter,key) in order.filter">{{filter}}: {{order.filter_value[key]}} | </span></p>
+
+            <p class="order__text">Требуется {{order.type.name_lower}} c характеристиками:
+              <span class="order__filters" v-for="(filter,key) in order.filter">
+                {{filter.placeholder}}: {{order.filter_value.find(x=>x.filter === filter.id).label}}</span>
+            </p>
             <p class="order__text">Описание: {{order.comment}}</p>
 
               <div v-if="!order.is_finished" class="order__middle">

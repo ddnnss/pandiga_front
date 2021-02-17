@@ -52,16 +52,33 @@
       <div class="technique-cards mb-60">
 
         <el-card class="technique-card" v-for="unit in user_units" :key="unit.id" :xs="24" :sm="12" :md="8" :lg="8">
-            <nuxt-link :to="`/catalog/${unit.type.name_slug}/${unit.name_slug}`">
+
+          <div class="technique-card__status">
+            <el-tag v-if="unit.is_active" type="success" effect="dark">Участвует в поиске</el-tag>
+            <el-tag v-else type="danger" effect="dark">Не участвует в поиске</el-tag>
+          </div>
+
           <el-image class="technique-card__img" :src="unit.images[0].image_thumb">
             <div slot="placeholder" class="image-slot">
               Загрузка<span class="dot">...</span>
             </div>
           </el-image>
+          <div class="technique-card__block">
+            <p class="technique-card__name">
+              <nuxt-link :to="`/catalog/${unit.type.name_slug}/${unit.name_slug}`">
+              {{unit.name}}
+              </nuxt-link>
+            </p>
+            <el-link v-if="unit.is_active" icon="el-icon-top" @click="unitPromote(unit.id)">Поднять в поиске</el-link>
+            <el-link v-else icon="el-icon-money" @click="unitPay(unit.id)">Оплатить размещение</el-link>
 
-          <p class="technique-card__name">{{unit.name}}</p>
-          <p class="technique-card__price">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> час</span> <span v-if="!unit.rent_type"> день</span> </p>
-        </nuxt-link>
+          </div>
+          <div class="technique-card__block">
+
+               <p class="technique-card__price">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> час</span> <span v-if="!unit.rent_type"> день</span> </p>
+
+          </div>
+
         </el-card>
 
       </div>
@@ -206,6 +223,44 @@
         console.log(this.imageUrl)
         this.avatar = file.raw
 
+      },
+      async unitPromote(id){
+        const response = await this.$axios.post('/api/v1/technique/promote',{unit_id:id})
+        console.log(response)
+        if(response.data.result){
+          this.$notify({
+            title: 'Успешно',
+            message: 'Ваша техника поднята в поиске',
+            type: 'success'
+          });
+          this.$auth.fetchUser()
+        }else {
+          this.$notify({
+            title: 'Ошибка',
+            message: 'Не хватает средств',
+            type: 'error'
+          });
+        }
+      },
+      async unitPay(id){
+        const response = await this.$axios.post('/api/v1/technique/pay',{unit_id:id})
+        console.log(response)
+         if(response.data.result){
+          this.$notify({
+            title: 'Успешно',
+            message: 'Ваша техника снова участвует в поиске',
+            type: 'success'
+          });
+          this.$auth.fetchUser()
+           const response = await this.$axios.get(`/api/v1/technique/user/units?user_id=${this.$auth.user.id}`)
+           this.user_units = response.data
+        }else {
+          this.$notify({
+            title: 'Ошибка',
+            message: 'Не хватает средств',
+            type: 'error'
+          });
+        }
       },
       async sendPartnerCode(){
         this.codeSend = true

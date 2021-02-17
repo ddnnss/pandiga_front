@@ -127,13 +127,15 @@
                 </div>
 
               </el-form>
-              <el-button class="mb-20"  type="primary" @click="disabled_tab3=false,activeTab='tab3'">Далее</el-button>
+
+              <el-button class="mb-20"  type="primary" @click="checkFilters">Далее</el-button>
             </el-col>
             <el-col :xs="24" :sm="12" :md="16" :lg="12" :xl="12">
               <el-card shadow="always">
                 <p class="section-sub-header mb-20">Для чего это нужно?</p>
                 <el-divider></el-divider>
                 <p class="mb-20">Выберете фильтры по которым Вашу заявку будут искать исполнители</p>
+                <p v-if="filtersNotSelected" class="color-main text-bold">Заполните все фильтры для продолжения</p>
 
               </el-card>
             </el-col>
@@ -172,6 +174,8 @@
                   <span style="float: right; color: #8492a6; font-size: 13px">{{ item.region }}</span>
                 </el-option>
               </el-select>
+              <!--:loading="add_btn_loading"-->
+              <el-button v-if="!is_added" class="mb-20"  type="primary" @click="createOrder">Разместить заявку</el-button>
               <client-only>
                 <yandex-map
                   :coords="order.coords"
@@ -191,14 +195,14 @@
                 </yandex-map>
               </client-only>
 
-              <!--:loading="add_btn_loading"-->
-              <el-button v-if="!is_added" class="mb-20"  type="primary" @click="createOrder">Разместить заявку</el-button>
+
             </el-col>
             <el-col :xs="24" :sm="12" :md="16" :lg="12" :xl="12">
               <el-card shadow="always">
                 <p class="section-sub-header mb-20">Для чего это нужно?</p>
                 <el-divider></el-divider>
                 <p class="mb-20">Напишите название Вашей заявки и краткое описание, а также выберите город, в котором нужно выполнить заявку</p>
+                <p>Вы можете указать точное местоположение на карте</p>
 
               </el-card>
             </el-col>
@@ -212,204 +216,218 @@
 </template>
 
 <script>
-  export default {
-    async fetch({store}){
-      if (store.getters['categories/categories'].length === 0){
-        await store.dispatch('categories/fetchCategories')
-      }
-    },
-    data() {
-      return {
-        dateOptions: {
-          disabledDate(time) {
-            return time.getTime() < Date.now();
-          },
+export default {
+  async fetch({store}){
+    if (store.getters['categories/categories'].length === 0){
+      await store.dispatch('categories/fetchCategories')
+    }
+  },
+  data() {
+    return {
+      dateOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
         },
-        timeOptions: {
-          disabledDate(time) {
-            return time.getTime() < Date.now();
-          },
-        },
-        base_url:'http://localhost:8000',
-        windowW:'',
-        tabPosition:'left',
-        activeTab:'tab1',
-        dialogImageUrl: '',
-        side_text: 'Сначала выберите нужную категорию',
-        dialogVisible: false,
-        is_city_selected: false,
-        is_added: false,
-        add_btn_loading: false,
-        disabled: false,
-        cities:[],
-        rentData:{
-          type:true,
-          date: '',
-          dates: '',
-          time:'',
-        },
-        order:{
-          city_id:null,
-          selectedType:'',
-          name:'',
-          rent_type:true,
-          min_rent_time:'',
-          rent_price:'',
-          description:'',
-          coords:[55,55],
-        },
-        all_filters:{
-          filter: []
-        },
-        selectedCategory:'',
-        types:[],
-        disabled_tab1:false,
-        disabled_tab2:true,
-        disabled_tab3:true,
-        disabled_tab4:true,
-        disabled_tab5:true,
-        loading: false,
-      }
-    },
-    computed:{
-      categories(){
-        return this.$store.getters['categories/categories']
       },
+      timeOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        },
+      },
+      base_url:'http://localhost:8000',
+      windowW:'',
+      tabPosition:'left',
+      activeTab:'tab1',
+      dialogImageUrl: '',
+      side_text: 'Сначала выберите нужную категорию',
+      dialogVisible: false,
+      is_city_selected: false,
+      is_added: false,
+      add_btn_loading: false,
+      disabled: false,
+      cities:[],
+      filtersNotSelected:false,
+      rentData:{
+        type:true,
+        date: '',
+        dates: '',
+        time:'',
+      },
+      order:{
+        city_id:null,
+        selectedType:'',
+        name:'',
+        rent_type:true,
+        min_rent_time:'',
+        rent_price:'',
+        description:'',
+        coords:[55,55],
+      },
+      all_filters:{
+        filter: []
+      },
+      selectedCategory:'',
+      types:[],
+      disabled_tab1:false,
+      disabled_tab2:true,
+      disabled_tab3:true,
+      disabled_tab4:true,
+      disabled_tab5:true,
+      loading: false,
+    }
+  },
+  computed:{
+    categories(){
+      return this.$store.getters['categories/categories']
     },
-    watch: {
-      windowW(val,) {
-        val <= 900 ? this.tabPosition='top' : this.tabPosition='left'
-      }
-    },
-    created(){
-    },
-    mounted() {
-      this.$nextTick(() => {
-        window.addEventListener('resize', this.onResize);
-      })
-    },
-    methods: {
-      checkStep1(){
-        if(this.order.rent_type){
-          if (!this.rentData.date || !this.rentData.time){
-            this.$notify({
-              title: 'Ошибка',
-              message: 'Все поля обязательны',
-              type: 'error'
-            });
-            return
-          }
-        }else{
-          if (!this.rentData.dates){
-            this.$notify({
-              title: 'Ошибка',
-              message: 'Укажите даты аренды',
-              type: 'error'
-            });
-            return
-          }
+  },
+  watch: {
 
-
+    windowW(val,) {
+      val <= 900 ? this.tabPosition='top' : this.tabPosition='left'
+    }
+  },
+  created(){
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize);
+    })
+  },
+  methods: {
+    checkFilters(){
+      this.filtersNotSelected = false
+      for(let i of this.all_filters.filter){
+        if(!i.value){
+          this.filtersNotSelected = true
+          return
         }
-        this.disabled_tab2=false
-        this.activeTab='tab2'
-      },
-      async searchCity(query){
-        if (query !== '' && query.length >= 2) {
-          console.log(query)
-
-          const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
-          console.log(result.data)
-          this.cities = result.data
-        } else {
-          this.cities = [];
-        }
-      },
-      citySelected(){
-        console.log('selected city',this.order.city_id)
-        console.log(this.cities.find(x => x.id === this.order.city_id).city)
-        ymaps.geocode(this.cities.find(x => x.id === this.order.city_id).city, {
-          results: 1
-        }).then( (res) => {
-          var firstGeoObject = res.geoObjects.get(0)
-          this.order.coords = firstGeoObject.geometry.getCoordinates()
-          this.is_city_selected = true
+      }
+      this.disabled_tab3=false
+      this.activeTab='tab3'
+  },
+  checkStep1(){
+    if(this.order.rent_type){
+      if (!this.rentData.date || !this.rentData.time){
+        this.$notify({
+          title: 'Ошибка',
+          message: 'Все поля обязательны',
+          type: 'error'
         });
-      },
-      mapClick(e){
-        console.log('data',e.get('coords'))
-        this.order.coords = e.get('coords');
-      },
-      initHandler(){
-        console.log('map init')
-      },
+        return
+      }
+    }else{
+      if (!this.rentData.dates){
+        this.$notify({
+          title: 'Ошибка',
+          message: 'Укажите даты аренды',
+          type: 'error'
+        });
+        return
+      }
 
-      async createOrder(){
-        if (!this.order.city_id){
-          this.$notify({
-            title: 'Ошибка',
-            message: 'Не указан город',
-            type: 'error'
-          });
-          return
-        }
-        if (!this.order.name){
-          this.$notify({
-            title: 'Ошибка',
-            message: 'Укажите название',
-            type: 'error'
-          });
-          return
-        }
-        this.add_btn_loading = true
-        let formData = new FormData()
-        formData.set('rent_data', JSON.stringify(this.rentData));
-        formData.set('order', JSON.stringify(this.order));
-        formData.set('filters', JSON.stringify(this.all_filters.filter));
-        await this.$axios({
-          method: 'post',
-          headers:{
-            'content-type': 'multipart/form-data'
-          },
-          url: '/api/v1/order/add/',
-          data: formData
-        }).then((response) => {
-          this.is_added = true
-          this.$notify({
-            title: 'Спасибо',
-            message: 'Ваша заявка размещена',
-            type: 'success'
-          });
-          this.$router.push('/lk/orders')
-        })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .then(function () {
-            // always executed
-          });
-      },
-      onResize() {
-        this.windowW = window.innerWidth
-      },
-      categorySelected(){
-        console.log('selected cat',this.selectedCategory)
-        this.side_text = 'Теперь выберите нужный тип техники'
-        for (let i of this.categories){
-          if (i.name_slug === this.selectedCategory){
-            this.types = i.types
-          }
-        }
-      },
-      async typeSelected(){
-        console.log('selected type',this.order.selectedType)
-        const  response_filters = await this.$axios.get(`/api/v1/technique/filters/${this.order.selectedType}/`)
-        this.all_filters.filter = response_filters.data
-        this.side_text = 'Теперь укажите тип аренды, время и дату/даты начала - завершения'
-      },
 
     }
-  }
+    this.disabled_tab2=false
+    this.activeTab='tab2'
+  },
+  async searchCity(query){
+    if (query !== '' && query.length >= 2) {
+      console.log(query)
+
+      const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
+      console.log(result.data)
+      this.cities = result.data
+    } else {
+      this.cities = [];
+    }
+  },
+  citySelected(){
+    console.log('selected city',this.order.city_id)
+    console.log(this.cities.find(x => x.id === this.order.city_id).city)
+    ymaps.geocode(this.cities.find(x => x.id === this.order.city_id).city, {
+      results: 1
+    }).then( (res) => {
+      var firstGeoObject = res.geoObjects.get(0)
+      this.order.coords = firstGeoObject.geometry.getCoordinates()
+      this.is_city_selected = true
+    });
+  },
+  mapClick(e){
+    console.log('data',e.get('coords'))
+    this.order.coords = e.get('coords');
+  },
+  initHandler(){
+    console.log('map init')
+  },
+
+  async createOrder(){
+    if (!this.order.city_id){
+      this.$notify({
+        title: 'Ошибка',
+        message: 'Не указан город',
+        type: 'error'
+      });
+      return
+    }
+    if (!this.order.name){
+      this.$notify({
+        title: 'Ошибка',
+        message: 'Укажите название',
+        type: 'error'
+      });
+      return
+    }
+    this.add_btn_loading = true
+    let formData = new FormData()
+    formData.set('rent_data', JSON.stringify(this.rentData));
+    formData.set('order', JSON.stringify(this.order));
+    formData.set('filters', JSON.stringify(this.all_filters.filter));
+    await this.$axios({
+      method: 'post',
+      headers:{
+        'content-type': 'multipart/form-data'
+      },
+      url: '/api/v1/order/add/',
+      data: formData
+    }).then((response) => {
+      this.is_added = true
+      this.$notify({
+        title: 'Спасибо',
+        message: 'Ваша заявка размещена',
+        type: 'success'
+      });
+      this.$router.push('/lk/orders')
+    })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  },
+  onResize() {
+    this.windowW = window.innerWidth
+  },
+  categorySelected(){
+    console.log('selected cat',this.selectedCategory)
+    this.side_text = 'Теперь выберите нужный тип техники'
+    for (let i of this.categories){
+      if (i.name_slug === this.selectedCategory){
+        this.types = i.types
+      }
+    }
+  },
+  async typeSelected(){
+    console.log('selected type',this.order.selectedType)
+    const  response_filters = await this.$axios.get(`/api/v1/technique/filters/${this.order.selectedType}/`)
+    this.all_filters.filter = response_filters.data
+    console.log(this.all_filters.filter )
+    this.side_text = 'Теперь укажите тип аренды, время и дату/даты начала - завершения'
+  },
+
+}
+}
 </script>
 

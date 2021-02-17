@@ -9,7 +9,19 @@
         <el-breadcrumb-item>{{unit.name}}</el-breadcrumb-item>
       </el-breadcrumb>
       <el-row class="mb-50">
-        <el-col :sm="8" :md="12" :lg="12"><carousel :starting-image="2" :images="unit.images"></carousel></el-col>
+
+        <el-col :sm="8" :md="12" :lg="12">
+          <el-image class="item-image" fit="cover"
+                    :src="curImage"  :preview-src-list="unitImages">
+          </el-image>
+          <div class="item-images">
+            <el-image class="item-image__thumb" :class="{'item-image__thumb-active':curImage===image}"
+                      v-for="(image,index) in unitImages"
+                    @click="curImage=image"
+                    :key="index" :src="image"></el-image>
+          </div>
+
+        </el-col>
         <el-col :sm="14" :md="10" :lg="10" :offset="2" class="item-info">
           <div class="item-info__top">
             <el-tag v-if="unit.is_free" class="item-info__top-status" type="success" effect="dark"> Cвободен </el-tag>
@@ -21,12 +33,12 @@
           </div>
           <div class="item-info__middle">
             <h1 class="item-info__middle-title section-header">{{unit.name}}, {{unit.year}}
-               <div v-if="this.$auth.loggedIn">
-              <div v-if="this.$auth.user.is_customer">
-                 <p v-if="!this.$auth.user.favorites.includes(unit.id)" class="item-info__middle-fav"><i @click="addFav(unit.id)" class="el-icon-star-off"></i></p>
+              <div v-if="this.$auth.loggedIn">
+                <div v-if="this.$auth.user.is_customer">
+                  <p v-if="!this.$auth.user.favorites.includes(unit.id)" class="item-info__middle-fav"><i @click="addFav(unit.id)" class="el-icon-star-off"></i></p>
                   <p v-else class="item-info__middle-fav"><i @click="delFav(unit.id)" class="el-icon-star-on color-yellow"></i></p>
+                </div>
               </div>
-               </div>
 
             </h1>
             <div class="item-info__middle-group">
@@ -51,10 +63,10 @@
                 <el-button slot="reference" plain>Написать</el-button>
               </el-popover>
             </div>
-<!--            <p>2.5 л ( 174 л.c.), дизель, автомат, 4WD</p><br>-->
+            <!--            <p>2.5 л ( 174 л.c.), дизель, автомат, 4WD</p><br>-->
             <div >
               <span class="text-bold fs-14 ">Размещение: {{unit.city}} | </span>
-               <el-link  class="text-bold fs-14 " @click="showMap">Показать на карте</el-link>
+              <el-link  class="text-bold fs-14 " @click="showMap">Показать на карте</el-link>
             </div>
 
           </div>
@@ -82,18 +94,18 @@
           <div class="item-owner">
             <p class="item-owner__title">О владельце:</p>
             <nuxt-link :to="'/user/'+unit.owner.id">
-            <div class="item-owner__group">
-              <img  class="item-owner__img" :src="unit.owner.avatar" alt="">
-              <div class="item-owner__group-inner">
-                <p v-if="unit.owner.is_person"  class="item-owner__name">{{unit.owner.fullname}}</p>
-                <p v-else  class="item-owner__name">{{unit.owner.organization_name}}</p>
-                <div v-if="unit.owner.rate_times > 0" class="catalog-item__rating mb-10">
-                  <p class="catalog-item__rating-p">{{unit.owner.rating}} </p>
-                  <span class="catalog-item__rating-span">Отзывов: {{unit.owner.rate_times}}</span>
+              <div class="item-owner__group">
+                <img  class="item-owner__img" :src="unit.owner.avatar" alt="">
+                <div class="item-owner__group-inner">
+                  <p v-if="unit.owner.is_person"  class="item-owner__name">{{unit.owner.fullname}}</p>
+                  <p v-else  class="item-owner__name">{{unit.owner.organization_name}}</p>
+                  <div v-if="unit.owner.rate_times > 0" class="catalog-item__rating mb-10">
+                    <p class="catalog-item__rating-p">{{unit.owner.rating}} </p>
+                    <span class="catalog-item__rating-span">Отзывов: {{unit.owner.rate_times}}</span>
+                  </div>
+                  <p class="item-owner__location">{{unit.city}}</p>
                 </div>
-                <p class="item-owner__location">{{unit.city}}</p>
               </div>
-            </div>
             </nuxt-link>
           </div>
         </el-col>
@@ -104,11 +116,8 @@
             </el-tab-pane>
             <el-tab-pane label="Характеристики" name="second">
 
-
-
               <ul  style="columns: 2; width: 80%">
                 <li class="item-description__feature" v-for="(item,index) in unit.filter">
-
                   <p>{{item.placeholder}}: <span>{{unit.filter_value.find(x=>x.filter === item.id).label}}</span></p>
                 </li>
               </ul>
@@ -186,158 +195,159 @@
 </template>
 
 <script>
-  import Carousel from '@/components/Carousel.vue';
-  import { loadYmap } from 'vue-yandex-maps'
-  import { yandexMap, ymapMarker } from 'vue-yandex-maps'
+import Carousel from '@/components/Carousel.vue';
+import { loadYmap } from 'vue-yandex-maps'
+import { yandexMap, ymapMarker } from 'vue-yandex-maps'
 
-  export default {
-    async asyncData({$axios,params}){
-      console.log(params)
-      try{
-        const response_unit = await $axios.get(`/api/v1/technique/unit/${params.unit_slug}`)
-        const unit = response_unit.data
-        console.log(unit)
-        return {unit}
-      }catch (e) {
-        throw e
-      }
-
-    },
-    components: {
-      Carousel,
-      yandexMap,
-      ymapMarker
-    },
-    data() {
-      return {
-        dateOptions: {
-          disabledDate(time) {
-            return time.getTime() < Date.now();
-          },
-        },
-        timeOptions: {
-          disabledDate(time) {
-            return time.getTime() < Date.now();
-          },
-        },
-        coords:[],
-        activeTab:'first',
-        private_message: '',
-        rentMsg_send:false,
-        is_city_selected:false,
-        rentData:{
-          technique_id:0,
-          owner_id:0,
-          type:'true',
-          date: '',
-          dates: '',
-          time:'',
-        },
-        isRentMessage:false,
-        loading: true,
-        rentModal: false,
-      }
-    },
-    mounted() {
-
-
-    },
-    created() {
-
-    },
-    methods: {
-      async addFav(id){
-        const response = await this.$axios.post(`/api/v1/user/fav_add/${id}`)
-        this.$auth.fetchUser()
-        this.$notify({
-              title: 'Успешно',
-              message: 'Техника добалена в избранное',
-              type: 'success'
-            });
-      },
-      async delFav(id){
-        const response = await this.$axios.post(`/api/v1/user/fav_del/${id}`)
-        this.$auth.fetchUser()
-        this.$notify({
-              title: 'Успешно',
-              message: 'Техника удалена из избранного',
-              type: 'success'
-            });
-      },
-      showMap(){
-        if (this.unit.coords.length >0){
-          this.coords = this.unit.coords.replace('[','').replace(']','').split(',')
-          this.is_city_selected = true
-        }else{
-          ymaps.geocode(this.unit.city, {
-            results: 1
-          }).then( (res) => {
-            var firstGeoObject = res.geoObjects.get(0)
-            this.coords = firstGeoObject.geometry.getCoordinates()
-            this.is_city_selected = true
-          });
-        }
-
-      },
-      async sendMsg(owner_id,is_rent_msg,unit_id){
-        await this.$axios.post(`/api/v1/chat/new_message/${owner_id}`,{message:this.private_message,isRentMessage:is_rent_msg,rentUnit:unit_id})
-          .then((response) => {
-            console.log(response.status);
-            this.private_message =''
-            this.$notify({
-              title: 'Успешно',
-              message: 'Ваше сообщение отправлено',
-              type: 'success'
-            });
-          })
-          .then(response => {
-            console.log('response1')
-            console.log(response)
-          })
-          .catch(error => {
-            console.log('response2')
-            console.log(error.response)
-            this.step1_btn_loading = false
-            this.login_error = true
-
-          });
-      },
-      async sendRentMsg(){
-        await this.$axios.post(`/api/v1/chat/new_message/${this.rentData.owner_id}`,{isRentMessage:true,
-          rentUnit:this.rentData.technique_id,
-          rentType:this.rentData.type,
-          rentDate:this.rentData.date,
-          rentDates:this.rentData.dates,
-          rentTime:this.rentData.time,
-        })
-          .then((response) => {
-            console.log(response.status);
-            this.rentData.technique_id = 0
-            this.rentData.type = 'true'
-            this.rentData.date = ''
-            this.rentData.dates =''
-            this.rentData.time =''
-            this.rentModal = false
-            this.$notify({
-              title: 'Успешно',
-              message: 'Ваше сообщение отправлено',
-              type: 'success'
-            });
-          })
-          .then(response => {
-            console.log('response1')
-            console.log(response)
-          })
-          .catch(error => {
-            console.log('response2')
-            console.log(error.response)
-            this.step1_btn_loading = false
-            this.login_error = true
-
-          });
-      },
-
+export default {
+  async asyncData({$axios,params}){
+    console.log(params)
+    try{
+      const response_unit = await $axios.get(`/api/v1/technique/unit/${params.unit_slug}`)
+      const unit = response_unit.data
+      console.log(unit)
+      return {unit}
+    }catch (e) {
+      throw e
     }
+  },
+  components: {
+    Carousel,
+    yandexMap,
+    ymapMarker
+  },
+  data() {
+    return {
+      dateOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        },
+      },
+      timeOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        },
+      },
+      unitImages:[],
+      curImage:'',
+      coords:[],
+      activeTab:'first',
+      private_message: '',
+      rentMsg_send:false,
+      is_city_selected:false,
+      rentData:{
+        technique_id:0,
+        owner_id:0,
+        type:'true',
+        date: '',
+        dates: '',
+        time:'',
+      },
+      isRentMessage:false,
+      loading: true,
+      rentModal: false,
+    }
+  },
+  mounted() {
+    for (let i of this.unit.images){
+      console.log(i)
+      this.unitImages.push(i.image)
+    }
+    this.curImage=this.unitImages[0]
+  },
+  created() {
+  },
+  methods: {
+    async addFav(id){
+      const response = await this.$axios.post(`/api/v1/user/fav_add/${id}`)
+      this.$auth.fetchUser()
+      this.$notify({
+        title: 'Успешно',
+        message: 'Техника добалена в избранное',
+        type: 'success'
+      });
+    },
+    async delFav(id){
+      const response = await this.$axios.post(`/api/v1/user/fav_del/${id}`)
+      this.$auth.fetchUser()
+      this.$notify({
+        title: 'Успешно',
+        message: 'Техника удалена из избранного',
+        type: 'success'
+      });
+    },
+    showMap(){
+      if (this.unit.coords.length >0){
+        this.coords = this.unit.coords.replace('[','').replace(']','').split(',')
+        this.is_city_selected = true
+      }else{
+        ymaps.geocode(this.unit.city, {
+          results: 1
+        }).then( (res) => {
+          var firstGeoObject = res.geoObjects.get(0)
+          this.coords = firstGeoObject.geometry.getCoordinates()
+          this.is_city_selected = true
+        });
+      }
+
+    },
+    async sendMsg(owner_id,is_rent_msg,unit_id){
+      await this.$axios.post(`/api/v1/chat/new_message/${owner_id}`,{message:this.private_message,isRentMessage:is_rent_msg,rentUnit:unit_id})
+        .then((response) => {
+          console.log(response.status);
+          this.private_message =''
+          this.$notify({
+            title: 'Успешно',
+            message: 'Ваше сообщение отправлено',
+            type: 'success'
+          });
+        })
+        .then(response => {
+          console.log('response1')
+          console.log(response)
+        })
+        .catch(error => {
+          console.log('response2')
+          console.log(error.response)
+          this.step1_btn_loading = false
+          this.login_error = true
+        });
+    },
+    async sendRentMsg(){
+      await this.$axios.post(`/api/v1/chat/new_message/${this.rentData.owner_id}`,{isRentMessage:true,
+        rentUnit:this.rentData.technique_id,
+        rentType:this.rentData.type,
+        rentDate:this.rentData.date,
+        rentDates:this.rentData.dates,
+        rentTime:this.rentData.time,
+      })
+        .then((response) => {
+          console.log(response.status);
+          this.rentData.technique_id = 0
+          this.rentData.type = 'true'
+          this.rentData.date = ''
+          this.rentData.dates =''
+          this.rentData.time =''
+          this.rentModal = false
+          this.$notify({
+            title: 'Успешно',
+            message: 'Ваше сообщение отправлено',
+            type: 'success'
+          });
+        })
+        .then(response => {
+          console.log('response1')
+          console.log(response)
+        })
+        .catch(error => {
+          console.log('response2')
+          console.log(error.response)
+          this.step1_btn_loading = false
+          this.login_error = true
+        });
+    },
+
   }
+}
 </script>
 
