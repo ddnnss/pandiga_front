@@ -43,7 +43,7 @@
               </div>
               <div v-if="unit.min_rent_time" class="form-group">
                 <p>Стоимость аренды в <span v-if="unit.rent_type">час</span><span v-else>день</span></p>
-                <el-input-number :min="1000" :max="999999" controls-position="right" v-model="unit.rent_price" style="width: 180px"></el-input-number >
+                <el-input-number :min="0" :max="999999" :step="100" controls-position="right" v-model="unit.rent_price" style="width: 180px"></el-input-number >
 
               </div>
               <el-button class="mb-20" v-if="unit.year" type="primary" @click="disabled_tab2=false,activeTab='tab2'">Далее</el-button>
@@ -97,14 +97,14 @@
                 </div>
 
               </el-form>
-              <el-button class="mb-20"  type="primary" @click="disabled_tab3=false,activeTab='tab3'">Далее</el-button>
+              <el-button class="mb-20"  type="primary" @click="checkFilters">Далее</el-button>
             </el-col>
             <el-col :xs="24" :sm="12" :md="16" :lg="12" :xl="12">
               <el-card shadow="always">
                 <p class="section-sub-header mb-20">Для чего это нужно?</p>
                 <el-divider></el-divider>
                 <p class="mb-20">Выберете фильтры по которым Вашу технику будут искать заказчики</p>
-
+                 <p v-if="filtersNotSelected" class="color-main text-bold">Заполните все фильтры для продолжения</p>
               </el-card>
             </el-col>
 
@@ -269,189 +269,203 @@
 </template>
 
 <script>
-  export default {
-    async fetch({store}){
-      if (store.getters['categories/categories'].length === 0){
-        await store.dispatch('categories/fetchCategories')
-      }
+export default {
+  async fetch({store}){
+    if (store.getters['categories/categories'].length === 0){
+      await store.dispatch('categories/fetchCategories')
+    }
 
-      // if (store.getters['cities/cities'].length === 0){
-      //   await store.dispatch('cities/fetchCities')
-      // }
-    },
-    data() {
-      return {
-        base_url:'http://localhost:8000',
-        cities:[],
-        windowW:'',
-        tabPosition:'left',
-        activeTab:'tab1',
-        dialogImageUrl: '',
-        dialogVisible: false,
-        cat_price: 0,
-        city_coefficient: 0,
-        total_price: 0,
-        is_city_selected: false,
-        is_added: false,
-        add_btn_loading: false,
-        disabled: false,
-        latitude:null,
-        longitude:null,
-        gettingLocation: false,
-        fileList:[],
-        unit:{
-          selectedType:'',
-          name:'',
-          year:'',
-          rent_type:true,
-          min_rent_time:'',
-          rent_price:'',
-          description:'',
-          city_id:'',
-          coords:[55,55],
-        },
-        all_filters:{
-          filter: []
-        },
-        selectedCategory:'',
-        types:[],
-        disabled_tab1:false,
-        disabled_tab2:true,
-        disabled_tab3:true,
-        disabled_tab4:true,
-        disabled_tab5:true,
-        loading: false,
-      }
-    },
-    computed:{
-      categories(){
-        return this.$store.getters['categories/categories']
+    // if (store.getters['cities/cities'].length === 0){
+    //   await store.dispatch('cities/fetchCities')
+    // }
+  },
+  data() {
+    return {
+      base_url:'http://localhost:8000',
+      cities:[],
+      windowW:'',
+      tabPosition:'left',
+      activeTab:'tab1',
+      dialogImageUrl: '',
+      dialogVisible: false,
+      cat_price: 0,
+      city_coefficient: 0,
+      total_price: 0,
+      is_city_selected: false,
+      is_added: false,
+      add_btn_loading: false,
+      disabled: false,
+      latitude:null,
+      longitude:null,
+      gettingLocation: false,
+      filtersNotSelected:false,
+      fileList:[],
+      unit:{
+        selectedType:'',
+        name:'',
+        year:'',
+        rent_type:true,
+        min_rent_time:'',
+        rent_price:'',
+        description:'',
+        city_id:'',
+        coords:[55,55],
       },
-      // cities(){
-      //   return this.$store.getters['cities/cities']
-      // }
+      all_filters:{
+        filter: []
+      },
+      selectedCategory:'',
+      types:[],
+      disabled_tab1:false,
+      disabled_tab2:true,
+      disabled_tab3:true,
+      disabled_tab4:true,
+      disabled_tab5:true,
+      loading: false,
+    }
+  },
+  computed:{
+    categories(){
+      return this.$store.getters['categories/categories']
     },
-    watch: {
-      windowW(val,) {
-        val <= 900 ? this.tabPosition='top' : this.tabPosition='left'
-      }
-    },
-    created(){
+    // cities(){
+    //   return this.$store.getters['cities/cities']
+    // }
+  },
+  watch: {
+    windowW(val,) {
+      val <= 900 ? this.tabPosition='top' : this.tabPosition='left'
+    }
+  },
+  created(){
 
-    },
-    mounted() {
-      this.$nextTick(() => {
-        window.addEventListener('resize', this.onResize);
-        // navigator.geolocation.getCurrentPosition(pos => {
-        //   this.coords.push(pos.coords.latitude);
-        //   this.coords.push(pos.coords.longitude);
-        //   console.log(this.coords)
-        // }, err => {
-        //   this.errorStr = err.message;
-        // })
-      })
-    },
-    methods: {
-      async searchCity(query){
-        if (query !== '' && query.length >= 2) {
-          console.log(query)
-          const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
-          console.log(result.data)
-          this.cities = result.data
-        } else {
-          this.cities = [];
-        }
-      },
-      citySelected(){
-        this.city_coefficient = parseFloat(this.cities.find(x => x.id === this.unit.city_id).coefficient)
-        this.total_price = parseFloat(this.city_coefficient * this.cat_price)
-        ymaps.geocode(this.cities.find(x => x.id === this.unit.city_id).city, {
-          results: 1
-        }).then( (res) => {
-          var firstGeoObject = res.geoObjects.get(0)
-          this.unit.coords = firstGeoObject.geometry.getCoordinates()
-          this.is_city_selected = true
-        });
-      },
-      mapClick(e){
-        console.log('data',e.get('coords'))
-        this.unit.coords = e.get('coords');
-      },
-      initHandler(){
-        console.log('map init')
-      },
-      async addUnit(){
-        if (this.$refs['imgUpload'].uploadFiles.length === 0){
-          console.log('no images')
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize);
+      // navigator.geolocation.getCurrentPosition(pos => {
+      //   this.coords.push(pos.coords.latitude);
+      //   this.coords.push(pos.coords.longitude);
+      //   console.log(this.coords)
+      // }, err => {
+      //   this.errorStr = err.message;
+      // })
+    })
+  },
+  methods: {
+    checkFilters(){
+      console.log('cccc')
+      this.filtersNotSelected = false
+      for(let i of this.all_filters.filter){
+        if(!i.value){
+          this.filtersNotSelected = true
+          console.log('not')
           return
         }
-        this.add_btn_loading = true
-        let formData = new FormData()
-        formData.set('unit', JSON.stringify(this.unit));
-        formData.set('filters', JSON.stringify(this.all_filters.filter));
-        this.$refs['imgUpload'].uploadFiles.forEach(img => {
-          formData.append("images", img.raw)
-        })
-        this.$refs['imgUpload_doc'].uploadFiles.forEach(img => {
-          formData.append("docs_images", img.raw)
+      }
+      this.disabled_tab3=false
+      this.activeTab='tab3'
+    },
+    async searchCity(query){
+      if (query !== '' && query.length >= 2) {
+        console.log(query)
+        const result = await this.$axios.get(`/api/v1/city/search?city=${query}`)
+        console.log(result.data)
+        this.cities = result.data
+      } else {
+        this.cities = [];
+      }
+    },
+    citySelected(){
+      this.city_coefficient = parseFloat(this.cities.find(x => x.id === this.unit.city_id).coefficient)
+      this.total_price = parseFloat(this.city_coefficient * this.cat_price)
+      ymaps.geocode(this.cities.find(x => x.id === this.unit.city_id).city, {
+        results: 1
+      }).then( (res) => {
+        var firstGeoObject = res.geoObjects.get(0)
+        this.unit.coords = firstGeoObject.geometry.getCoordinates()
+        this.is_city_selected = true
+      });
+    },
+    mapClick(e){
+      console.log('data',e.get('coords'))
+      this.unit.coords = e.get('coords');
+    },
+    initHandler(){
+      console.log('map init')
+    },
+    async addUnit(){
+      if (this.$refs['imgUpload'].uploadFiles.length === 0){
+        console.log('no images')
+        return
+      }
+      this.add_btn_loading = true
+      let formData = new FormData()
+      formData.set('unit', JSON.stringify(this.unit));
+      formData.set('filters', JSON.stringify(this.all_filters.filter));
+      this.$refs['imgUpload'].uploadFiles.forEach(img => {
+        formData.append("images", img.raw)
+      })
+      this.$refs['imgUpload_doc'].uploadFiles.forEach(img => {
+        formData.append("docs_images", img.raw)
 
+      })
+      await this.$axios({
+        method: 'post',
+        headers:{
+          'content-type': 'multipart/form-data'
+        },
+        url: '/api/v1/technique/unit/add/',
+        data: formData
+      }).then((response) => {
+        this.is_added = true
+        this.$notify({
+          title: 'Успешно',
+          message: 'Ваша техника добавлена в каталог',
+          type: 'success'
+        });
+      })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
         })
-        await this.$axios({
-          method: 'post',
-          headers:{
-            'content-type': 'multipart/form-data'
-          },
-          url: '/api/v1/technique/unit/add/',
-          data: formData
-        }).then((response) => {
-          this.is_added = true
-          this.$notify({
-            title: 'Успешно',
-            message: 'Ваша техника добавлена в каталог',
-            type: 'success'
-          });
-        })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .then(function () {
-            // always executed
-          });
-      },
-      onResize() {
-        this.windowW = window.innerWidth
-      },
-      categorySelected(){
-        for (let i of this.categories){
-          if (i.name_slug === this.selectedCategory){
-            this.types = i.types
-            this.cat_price = i.price
-          }
+        .then(function () {
+          // always executed
+        });
+    },
+    onResize() {
+      this.windowW = window.innerWidth
+    },
+    categorySelected(){
+      for (let i of this.categories){
+        if (i.name_slug === this.selectedCategory){
+          this.types = i.types
+          this.cat_price = i.price
         }
-      },
-      async typeSelected(){
-        console.log('selected type',this.unit.selectedType)
-        const  response_filters = await this.$axios.get(`/api/v1/technique/filters/${this.unit.selectedType}/`)
-        this.all_filters.filter = response_filters.data
-      },
-      handleRemove(file,i) {
-        console.log(file.uid);
-        console.log(this.$refs['imgUpload'].uploadFiles)
-        let x=0
-        for (let i of this.$refs['imgUpload'].uploadFiles){
-          if (i.uid === file.uid){
-            console.log(x)
-            this.$refs['imgUpload'].uploadFiles.splice(x,1)
-          }
-          x+=1
+      }
+    },
+    async typeSelected(){
+      console.log('selected type',this.unit.selectedType)
+      const  response_filters = await this.$axios.get(`/api/v1/technique/filters/${this.unit.selectedType}/`)
+      this.all_filters.filter = response_filters.data
+    },
+    handleRemove(file,i) {
+      console.log(file.uid);
+      console.log(this.$refs['imgUpload'].uploadFiles)
+      let x=0
+      for (let i of this.$refs['imgUpload'].uploadFiles){
+        if (i.uid === file.uid){
+          console.log(x)
+          this.$refs['imgUpload'].uploadFiles.splice(x,1)
         }
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      },
-    }
+        x+=1
+      }
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
   }
+}
 </script>
 

@@ -19,7 +19,8 @@
     "nuxt": "^2.13.0",
     "v-mask": "^2.2.3",
     "vue-the-mask": "^0.11.1",
-    "vue-yandex-maps": "^0.10.8"
+    "vue-yandex-maps": "^0.10.8",
+    "vue-scrollto": "^2.20.0"
   },
   "devDependencies": {
     "node-sass": "^4.14.1",

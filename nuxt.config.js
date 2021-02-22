@@ -1,5 +1,12 @@
 
 export default {
+  // env: {
+  //       ws_url: 'wss://www.pandiga.ru',
+  //       img_url: 'https://www.pandiga.ru',
+  //       online_ws:null
+  //   },
+
+
   env: {
         ws_url: 'ws://localhost:8000',
         img_url: 'http://localhost:8000',
@@ -50,6 +57,7 @@ export default {
     '@/plugins/element-ui',
     '@/plugins/mask',
     //'@/plugins/v_mask',
+    '@/plugins/scroll',
     {src:'@/plugins/ymapPlugin',mode: 'client'},
   //  { src: '@/plugins/ws.js', ssr: false },
   ],
@@ -79,6 +87,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    // baseURL:'https://www.pandiga.ru'
     baseURL:'http://localhost:8000'
   },
   /*

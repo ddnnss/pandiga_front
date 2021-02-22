@@ -128,14 +128,14 @@
 
               </el-form>
 
-              <el-button class="mb-20"  type="primary" @click="checkFilters">Далее</el-button>
+              <el-button class="mb-20"  type="primary" @click="disabled_tab3=false,activeTab='tab3'" >Далее</el-button>
             </el-col>
             <el-col :xs="24" :sm="12" :md="16" :lg="12" :xl="12">
               <el-card shadow="always">
                 <p class="section-sub-header mb-20">Для чего это нужно?</p>
                 <el-divider></el-divider>
                 <p class="mb-20">Выберете фильтры по которым Вашу заявку будут искать исполнители</p>
-                <p v-if="filtersNotSelected" class="color-main text-bold">Заполните все фильтры для продолжения</p>
+
 
               </el-card>
             </el-col>
@@ -296,10 +296,12 @@ export default {
   },
   methods: {
     checkFilters(){
+      console.log('cccc')
       this.filtersNotSelected = false
       for(let i of this.all_filters.filter){
         if(!i.value){
           this.filtersNotSelected = true
+          console.log('not')
           return
         }
       }

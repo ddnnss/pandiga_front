@@ -18,9 +18,9 @@
             <p v-if="this.$auth.user.is_person" class="user-profile__info-name">{{userData.first_name}} {{userData.last_name}}</p>
             <p v-if="!this.$auth.user.is_person" class="user-profile__info-name">{{userData.organization_name}}<br>ИНН: {{userData.inn}}<br>ОГРН: {{userData.ogrn}}</p>
             <div v-if="this.$auth.user.rate_times > 0" class="catalog-item__rating mb-10">
-            <p class="catalog-item__rating-p">{{this.$auth.user.rating}} </p>
-            <span class="catalog-item__rating-span">Отзывов: {{this.$auth.user.rate_times}}</span>
-          </div>
+              <p class="catalog-item__rating-p">{{this.$auth.user.rating}} </p>
+              <span class="catalog-item__rating-span">Отзывов: {{this.$auth.user.rate_times}}</span>
+            </div>
             <p class="user-profile__info-location">{{userData.city}}</p>
           </div>
           <div class="user-profile__button">
@@ -35,12 +35,22 @@
             <!--            inactive-text="Я исполнитель"-->
             <!--            @change="updateUser">-->
             <!--          </el-switch>-->
-            <div style="align-items: center" class="mb-15 flex-wrapper"><p>Баланс: <el-tag type="info">{{$auth.user.balance}} руб</el-tag></p>
+            <div  class="mb-15 flex-wrapper"><p>Баланс: <el-tag type="info">{{$auth.user.balance}} руб</el-tag></p>
               <nuxt-link to="/lk/balance"><el-button size="mini" type="success">Пополнить</el-button></nuxt-link>
             </div>
-            <p class="mb-15">Партнерский баланс: <el-tag type="info">{{$auth.user.partner_balance}} руб</el-tag></p>
-            <p class="mb-15">Партнерский код: <el-tag type="info">{{$auth.user.partner_code}}</el-tag></p>
-<!--            <p class="mb-15">5 раз сдана техника в аренду<br>5 отзывов получено<br>0 % повторных заказов</p>-->
+            <p @click="$router.push('/lk/refferal/')" class="mb-15 c-pointer flex-wrapper">
+              Партнерский баланс: <el-tag type="info">{{$auth.user.partner_balance}} руб</el-tag>
+              <el-tooltip class="item" effect="dark" :content="partner_info" placement="top">
+                <el-button type="info" icon="el-icon-info" circle size="mini"></el-button>
+              </el-tooltip>
+            </p>
+            <p class="mb-15 flex-wrapper">
+              Партнерский код: <el-tag type="info">{{$auth.user.partner_code}}</el-tag>
+              <el-tooltip class="item" effect="dark" :content="partner_code_info" placement="top">
+                <el-button type="info" icon="el-icon-info" circle size="mini"></el-button>
+              </el-tooltip>
+            </p>
+            <!--            <p class="mb-15">5 раз сдана техника в аренду<br>5 отзывов получено<br>0 % повторных заказов</p>-->
             <el-button class="mb-20 full-w" @click="editProfileModal = true" type="primary">Изменить профиль</el-button>
             <el-button class="mb-20 full-w" @click="partnerCodeModal = true" type="primary">Ввести код партнера</el-button>
           </div>
@@ -49,39 +59,48 @@
 
       <div v-if="!this.$auth.user.is_customer">
         <h3 class="section-header f25">Техника</h3>
-      <div class="technique-cards mb-60">
+        <div class="technique-cards mb-60">
 
-        <el-card class="technique-card" v-for="unit in user_units" :key="unit.id" :xs="24" :sm="12" :md="8" :lg="8">
+          <el-card class="technique-card" v-for="unit in user_units" :key="unit.id" :xs="24" :sm="12" :md="8" :lg="8">
 
-          <div class="technique-card__status">
-            <el-tag v-if="unit.is_active" type="success" effect="dark">Участвует в поиске</el-tag>
-            <el-tag v-else type="danger" effect="dark">Не участвует в поиске</el-tag>
-          </div>
-
-          <el-image class="technique-card__img" :src="unit.images[0].image_thumb">
-            <div slot="placeholder" class="image-slot">
-              Загрузка<span class="dot">...</span>
+            <div class="technique-card__status">
+              <el-tag v-if="unit.is_active" type="success" effect="dark">Участвует в поиске</el-tag>
+              <el-tag v-else type="danger" effect="dark">Не участвует в поиске</el-tag>
             </div>
-          </el-image>
-          <div class="technique-card__block">
-            <p class="technique-card__name">
-              <nuxt-link :to="`/catalog/${unit.type.name_slug}/${unit.name_slug}`">
-              {{unit.name}}
-              </nuxt-link>
-            </p>
-            <el-link v-if="unit.is_active" icon="el-icon-top" @click="unitPromote(unit.id)">Поднять в поиске</el-link>
-            <el-link v-else icon="el-icon-money" @click="unitPay(unit.id)">Оплатить размещение</el-link>
 
-          </div>
-          <div class="technique-card__block">
+            <el-image class="technique-card__img" :src="unit.images[0].image_thumb">
+              <div slot="placeholder" class="image-slot">
+                Загрузка<span class="dot">...</span>
+              </div>
+            </el-image>
+            <div class="technique-card__block">
+              <p class="technique-card__name">
+                <nuxt-link :to="`/catalog/${unit.type.name_slug}/${unit.name_slug}`">
+                  {{unit.name}}
+                </nuxt-link>
+              </p>
+              <el-tooltip v-if="unit.is_active" class="item" effect="light" :content="`Стоимость : ${unit.ad_price} руб`" placement="left">
+                <el-link  icon="el-icon-top" @click="unitPromote(unit.id,false)">Поднять в поиске</el-link>
+              </el-tooltip>
+              <el-tooltip v-else class="item" effect="light" :content="`Стоимость : ${unit.ad_price} руб`" placement="left">
+                <el-link  icon="el-icon-money" @click="unitPay(unit.id)">Оплатить размещение</el-link>
+              </el-tooltip>
 
-               <p class="technique-card__price">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> час</span> <span v-if="!unit.rent_type"> день</span> </p>
 
-          </div>
 
-        </el-card>
+            </div>
+            <div class="technique-card__block">
+              <p class="technique-card__price">{{unit.rent_price}} руб./ <span v-if="unit.rent_type"> час</span> <span v-if="!unit.rent_type"> день</span> </p>
+              <el-tooltip v-if="unit.is_active" class="item" effect="light" :content="`Стоимость : ${unit.ad_price + vip_price} руб`" placement="left">
+                <el-link icon="el-icon-upload2" @click="unitPromote(unit.id,true)">Закрепить и поднять</el-link>
+              </el-tooltip>
 
-      </div>
+
+            </div>
+
+          </el-card>
+
+        </div>
       </div>
 
       <h3 v-if="feedbacks.length>0" class="section-header f25">Отзывы</h3>
@@ -168,176 +187,179 @@
 </template>
 
 <script>
-  export default {
-    async asyncData({$axios,$auth,params}){
-      console.log(params)
-      try{
-        const  user_units_temp = await $axios.get(`/api/v1/technique/user/units?user_id=${$auth.user.id}`)
-        const response_feedbacks = await $axios.get(`/api/v1/user/get_user_feedback?user_id=${$auth.user.id}`)
-        const response_favorites = await $axios.get(`/api/v1/user/fav_get/`)
-        console.log(response_favorites.data)
-        const user_units = user_units_temp.data
-        const feedbacks = response_feedbacks.data
-        console.log(user_units)
-        return {user_units,feedbacks}
-      }catch (e) {
-        throw e
-      }
-
-    },
-    data() {
-      return {
-        imageUrl: this.$auth.user.avatar,
-        avatar:'',
-        editProfileModal: false,
-        partnerCodeModal: false,
-        roleChange: false,
-        codeSend: false,
-        codeResult:'',
-        partnerCode:{
-          code:null
-        },
-        userData: {
-          email: this.$auth.user.email,
-          organization_name: this.$auth.user.organization_name,
-          inn: this.$auth.user.inn,
-          ogrn: this.$auth.user.ogrn,
-          orders_count: this.$auth.user.orders_count,
-          rent_count: this.$auth.user.rent_count,
-          city: this.$auth.user.city.city,
-          first_name: this.$auth.user.first_name,
-          last_name: this.$auth.user.last_name,
-          phone: this.$auth.user.phone,
-          is_customer: this.$auth.user.is_customer,
-
-        }
-      }
-    },
-    mounted() {
-      this.$auth.fetchUser()
-
-    },
-    methods: {
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-        console.log(this.imageUrl)
-        this.avatar = file.raw
-
-      },
-      async unitPromote(id){
-        const response = await this.$axios.post('/api/v1/technique/promote',{unit_id:id})
-        console.log(response)
-        if(response.data.result){
-          this.$notify({
-            title: 'Успешно',
-            message: 'Ваша техника поднята в поиске',
-            type: 'success'
-          });
-          this.$auth.fetchUser()
-        }else {
-          this.$notify({
-            title: 'Ошибка',
-            message: 'Не хватает средств',
-            type: 'error'
-          });
-        }
-      },
-      async unitPay(id){
-        const response = await this.$axios.post('/api/v1/technique/pay',{unit_id:id})
-        console.log(response)
-         if(response.data.result){
-          this.$notify({
-            title: 'Успешно',
-            message: 'Ваша техника снова участвует в поиске',
-            type: 'success'
-          });
-          this.$auth.fetchUser()
-           const response = await this.$axios.get(`/api/v1/technique/user/units?user_id=${this.$auth.user.id}`)
-           this.user_units = response.data
-        }else {
-          this.$notify({
-            title: 'Ошибка',
-            message: 'Не хватает средств',
-            type: 'error'
-          });
-        }
-      },
-      async sendPartnerCode(){
-        this.codeSend = true
-        const response = await this.$axios.post('/api/v1/user/new_partner/',this.partnerCode)
-        console.log(response)
-        if (response.data['status']){
-          this.codeSend=false
-          this.codeResult='Код успешно применен'
-        }else {
-          this.codeSend=false
-          this.codeResult='Код не действительный'
-        }
-      },
-
-
-      async updateUser(){
-        this.roleChange = true
-        let formData = new FormData()
-        formData.set('userData', JSON.stringify(this.userData))
-
-        formData.set('avatar',this.avatar)
-
-        await this.$axios({
-          method: 'post',
-          headers:{
-            'content-type': 'multipart/form-data'
-          },
-          url: '/api/v1/user/update/',
-          data: formData
-        }).then((response) => {
-          this.roleChange = false
-          this.$notify({
-            title: 'Успешно',
-            message: 'Ваши данные обновлены',
-            type: 'success'
-          });
-          this.$auth.fetchUser()
-          this.editProfileModal = false
-
-
-        })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .then(function () {
-            // always executed
-          });
-      },
-
+export default {
+  async asyncData({$axios,$auth,params}){
+    console.log(params)
+    try{
+      const  user_units_temp = await $axios.get(`/api/v1/technique/user/units?user_id=${$auth.user.id}`)
+      const response_feedbacks = await $axios.get(`/api/v1/user/get_user_feedback?user_id=${$auth.user.id}`)
+      const response_favorites = await $axios.get(`/api/v1/user/fav_get/`)
+      console.log(response_favorites.data)
+      const user_units = user_units_temp.data
+      const feedbacks = response_feedbacks.data
+      console.log(user_units)
+      return {user_units,feedbacks}
+    }catch (e) {
+      throw e
     }
+
+  },
+  data() {
+    return {
+      partner_info:'Информация о партнерке',
+      partner_code_info:'Информация о коде',
+      imageUrl: this.$auth.user.avatar,
+      vip_price:100,
+      avatar:'',
+      editProfileModal: false,
+      partnerCodeModal: false,
+      roleChange: false,
+      codeSend: false,
+      codeResult:'',
+      partnerCode:{
+        code:null
+      },
+      userData: {
+        email: this.$auth.user.email,
+        organization_name: this.$auth.user.organization_name,
+        inn: this.$auth.user.inn,
+        ogrn: this.$auth.user.ogrn,
+        orders_count: this.$auth.user.orders_count,
+        rent_count: this.$auth.user.rent_count,
+        city: this.$auth.user.city.city,
+        first_name: this.$auth.user.first_name,
+        last_name: this.$auth.user.last_name,
+        phone: this.$auth.user.phone,
+        is_customer: this.$auth.user.is_customer,
+
+      }
+    }
+  },
+  mounted() {
+    this.$auth.fetchUser()
+
+  },
+  methods: {
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      console.log(this.imageUrl)
+      this.avatar = file.raw
+
+    },
+    async unitPromote(id,pin){
+      const response = await this.$axios.post('/api/v1/technique/promote',{unit_id:id,is_pin:pin})
+      console.log(response)
+      if(response.data.result){
+        this.$notify({
+          title: 'Успешно',
+          message: 'Ваша техника поднята в поиске',
+          type: 'success'
+        });
+        this.$auth.fetchUser()
+      }else {
+        this.$notify({
+          title: 'Ошибка',
+          message: 'Не хватает средств',
+          type: 'error'
+        });
+      }
+    },
+    async unitPay(id){
+      const response = await this.$axios.post('/api/v1/technique/pay',{unit_id:id})
+      console.log(response)
+      if(response.data.result){
+        this.$notify({
+          title: 'Успешно',
+          message: 'Ваша техника снова участвует в поиске',
+          type: 'success'
+        });
+        this.$auth.fetchUser()
+        const response = await this.$axios.get(`/api/v1/technique/user/units?user_id=${this.$auth.user.id}`)
+        this.user_units = response.data
+      }else {
+        this.$notify({
+          title: 'Ошибка',
+          message: 'Не хватает средств',
+          type: 'error'
+        });
+      }
+    },
+    async sendPartnerCode(){
+      this.codeSend = true
+      const response = await this.$axios.post('/api/v1/user/new_partner/',this.partnerCode)
+      console.log(response)
+      if (response.data['status']){
+        this.codeSend=false
+        this.codeResult='Код успешно применен'
+      }else {
+        this.codeSend=false
+        this.codeResult='Код не действительный'
+      }
+    },
+
+
+    async updateUser(){
+      this.roleChange = true
+      let formData = new FormData()
+      formData.set('userData', JSON.stringify(this.userData))
+
+      formData.set('avatar',this.avatar)
+
+      await this.$axios({
+        method: 'post',
+        headers:{
+          'content-type': 'multipart/form-data'
+        },
+        url: '/api/v1/user/update/',
+        data: formData
+      }).then((response) => {
+        this.roleChange = false
+        this.$notify({
+          title: 'Успешно',
+          message: 'Ваши данные обновлены',
+          type: 'success'
+        });
+        this.$auth.fetchUser()
+        this.editProfileModal = false
+
+
+      })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
+    },
+
   }
+}
 </script>
 <style>
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-    text-align: center;
-  }
-  .avatar {
-    width: 100px;
-    height: 100px;
-    display: block;
-    border-radius: 50%;
-    object-fit: cover;
-  }
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+}
 </style>

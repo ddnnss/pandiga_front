@@ -10,7 +10,7 @@
       </el-breadcrumb>
 
       <div class="catalog-inner__title">
-        <h1 class="section-header fg-10">{{technique_type.name}}</h1>
+        <h1 id="catalog_top" class="section-header fg-10">{{technique_type.name}}</h1>
 
 <!--        <div class="catalog-inner__title-inner">-->
 <!--          <p style="margin-right: 10px">Сортировка:</p>-->
@@ -25,8 +25,10 @@
 <!--        </div>-->
       </div>
       <div class="catalog-inner__wrapper">
-        <div style="width: 100%" class="catalog-inner__left">
-
+        <div v-loading="loading"
+             element-loading-text="Подождите..."
+             element-loading-spinner="el-icon-loading"
+             style="width: 100%" class="catalog-inner__left">
           <div v-if="technique_units.length>0" class="catalog-item "  v-for="unit in technique_units" :class="{vipItem : unit.is_vip}">
             <div class="catalog-item__img">
               <el-tag v-if="unit.is_moderated" class="catalog-item__checked" type="success" effect="dark">Проверен</el-tag>
@@ -204,7 +206,10 @@
               </el-select>
 
               </div>
-              <el-button type="primary" class="full-w" @click="submitForm(1)">Поиск</el-button>
+              <el-button type="primary"
+                         :loading="loading"
+                         class="full-w"
+                         @click="submitForm(1)">Поиск</el-button>
             </el-form>
 
           </div>
@@ -412,10 +417,18 @@
     methods: {
      async paginatorChange(page){
         console.log(page)
+       this.loading = true
        let  response_units
        if (!this.is_filtered){
             response_units = await this.$axios.get(`/api/v1/technique/units?page=${page}&type=${this.$route.params.catalog_slug}`)
          this.technique_units = response_units.data.results
+          this.loading = false
+         this.$scrollTo('#catalog_top',300,
+           {offset: -120,
+             easing: 'ease-in',
+             lazy: false}
+             )
+
        }
        else {
            this.submitForm(page)
@@ -509,6 +522,7 @@
           });
       },
       async submitForm(page){
+       this.loading = true
         await this.$axios({
           method: 'post',
           headers:{
@@ -533,6 +547,12 @@
           this.technique_units =response.data.results
           this.is_filtered = true
           this.page_count = response.data.page_count
+          this.loading = false
+          this.$scrollTo('#catalog_top',300,
+           {offset: -120,
+             easing: 'ease-in',
+             lazy: false}
+             )
           console.log('items_count posrtt',response.data)
         })
           .catch(function (error) {
