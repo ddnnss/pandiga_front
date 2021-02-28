@@ -120,7 +120,7 @@
     <section class="mobile-app">
       <div class="container">
         <el-row >
-          <el-col  :md="12" :lg="16">
+          <el-col :sm="12" :md="12" :lg="16">
             <h3 class="mobile-app__title">Загрузите мобильное приложение</h3>
             <p class="mobile-app__subtitle">Получите ссылку для скачивания приложения</p>
             <el-row class="mobile-app__phone" :gutter="20">
@@ -135,7 +135,7 @@
             </div>
             </div>
           </el-col>
-          <el-col :md="12" :lg="8">
+          <el-col :sm="12" :md="12" :lg="8">
             <div class="mobile-app__image">
               <img src="/mobile.png" alt="">
             </div>
@@ -146,21 +146,21 @@
     <section class="how-it-works">
       <div class="container">
         <h3 class="section-header text-center mb-60">Как это работает</h3>
-        <el-row >
-          <el-col class="how-it-works__item text-center" :xs="24" :sm="6" :md="6" :lg="8">
+        <div class="how-it-works__wrapper">
+          <div class="how-it-works__item text-center" >
             <img class="how-it-works__item-img" src="/hw1.png" alt="">
             <p class="how-it-works__item-text text1">Заполните критерии поиска</p>
-          </el-col>
-          <el-col class="how-it-works__item text-center" :xs="24" :sm="6" :md="6" :lg="8">
+          </div>
+          <div class="how-it-works__item text-center" >
             <img class="how-it-works__item-img" src="/hw2.png" alt="">
             <p class="how-it-works__item-text text2">Посмотрите подобранную технику</p>
-          </el-col>
-          <el-col class="how-it-works__item text-center" :xs="24" :sm="6" :md="6" :lg="8">
+          </div>
+          <div class="how-it-works__item text-center" >
             <img class="how-it-works__item-img" src="/hw3.png" alt="">
             <p class="how-it-works__item-text text3">Сделайте выбор и свяжитесь с владельцем техники</p>
-          </el-col>
+          </div>
+        </div>
 
-        </el-row>
 
 
       </div>

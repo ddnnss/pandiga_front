@@ -142,7 +142,7 @@
 
       <div class="sidebar">
         <div class="sidebar__logo">
-          <img src="/logo.png" alt="">
+          <img src="/logo.svg" alt="">
         </div>
         <el-menu
           v-if="this.$auth.loggedIn"

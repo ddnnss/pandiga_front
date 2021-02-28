@@ -126,6 +126,11 @@
 
 .main-catalog
   margin-bottom: 100px
+  &__wrapper
+    display: grid
+    grid-template-columns: repeat(auto-fill,minmax(300px,1fr))
+    grid-column-gap: 20px
+    grid-row-gap: 20px
   &__item
     border-radius: 10px
     padding: 30px 0 30px 20px
@@ -144,6 +149,7 @@
       font-size: 25px
       margin-bottom: 15px
     &-list
+      min-height: 130px
       &-item
         margin-bottom: 15px
         &:last-child
@@ -199,6 +205,11 @@
 
 .how-it-works
   padding: 80px 0
+  &__wrapper
+    display: grid
+    grid-template-columns: repeat(auto-fill,minmax(300px,1fr))
+    grid-column-gap: 20px
+    grid-row-gap: 20px
   &__item
     &-img
       margin-bottom: 30px
@@ -216,6 +227,8 @@
 @media (max-width: 768px)
   .how-it-works
     padding: 40px 0
+    &__wrapper
+      grid-template-columns: repeat(auto-fill,minmax(220px,1fr))
     &__item
       margin-bottom: 10px
       &-img

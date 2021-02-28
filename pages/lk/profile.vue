@@ -102,8 +102,8 @@
 
         </div>
       </div>
-
-      <h3 v-if="feedbacks.length>0" class="section-header f25">Отзывы</h3>
+<div v-else>
+  <h3 v-if="feedbacks.length>0" class="section-header f25">Отзывы</h3>
       <h3 v-else class="section-header f25">Отзывов пока нет</h3>
       <div class="feedback b-border" v-for="feedback in feedbacks" :key="feedback.id">
         <div class="feedback__top">
@@ -117,6 +117,8 @@
           <p>{{feedback.text}}</p>
         </div>
       </div>
+</div>
+
     </div>
     <el-dialog
       title="Ваши данные"

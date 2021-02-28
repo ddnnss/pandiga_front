@@ -10,7 +10,7 @@
       </el-breadcrumb>
       <el-row class="mb-50">
 
-        <el-col :sm="8" :md="12" :lg="12">
+        <el-col :sm="12" :md="12" :lg="12">
           <el-image class="item-image" fit="cover"
                     :src="curImage"  :preview-src-list="unitImages">
           </el-image>
@@ -22,7 +22,7 @@
           </div>
 
         </el-col>
-        <el-col :sm="14" :md="10" :lg="10" :offset="2" class="item-info">
+        <el-col :sm="8" :md="10" :lg="10" :offset="2" class="item-info">
           <div class="item-info__top">
             <el-tag v-if="unit.is_free" class="item-info__top-status" type="success" effect="dark"> Cвободен </el-tag>
             <el-tag v-if="!unit.is_free" class="item-info__top-status" type="danger" effect="dark"> Занят </el-tag>

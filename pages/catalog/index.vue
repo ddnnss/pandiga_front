@@ -4,8 +4,8 @@
 
      <div class="container">
        <h1 class="section-header text-center mb-60">Каталог техники</h1>
-       <el-row :gutter="15">
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" v-for="(item,iindex) in categories" :key="item.id">
+       <div class="main-catalog__wrapper">
+         <div class="main-catalog__item-wrapper" v-for="(item,iindex) in categories" :key="item.id">
             <div class="main-catalog__item " :style="{'background': '#F4F4F4 url('+item.image+')'}">
               <p class="main-catalog__item-title">{{item.name}}</p>
 
@@ -19,9 +19,9 @@
               </ul>
             </div>
             <p @click="removeClass(iindex)" class="show-btn" :ref="'show_btn'+iindex" v-if="item.types.length > catShow">Показать остальные {{item.types.length - catShow}} категорий</p>
-          </el-col>
+          </div>
+       </div>
 
-        </el-row>
      </div>
    </section>
 
